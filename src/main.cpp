@@ -3,9 +3,7 @@
 #include <vector>
 #include "GraphicsSystem.h"
 #include "EventSystem.h"
-
-const int FPS = 60;
-const float FRAMEDURATION = (1.0 / 60) * 1000; // frame duration in ms
+#include "SystemManager.h"
 
 int main()
 {
@@ -18,41 +16,18 @@ int main()
 	}
 
 	// create systems
+	// TODO: this bool pointer that gets passed around to two classes sucks
 	bool running = true;
-
-	std::vector<System*> systems;
 
 	EventSystem loop(&running);
 	GraphicsSystem graphics;
 
-	systems.push_back(&loop);
-	systems.push_back(&graphics);
+	SystemManager manager(60, &running);
 
-	// main loop
-	int frames = 0;
-	float avgfps = 0;
-	const Uint32 initial_ticks = SDL_GetTicks();
-	Uint32 start;
-	Uint32 duration;
+	manager.add(&loop);
+	manager.add(&graphics);
 
-	while (running) {
-		start = SDL_GetTicks();
-		frames += 1;
-
-		float diff = SDL_GetTicks() - initial_ticks;
-		avgfps = (frames * 1000) / diff;
-		std::cout << "Average fps: " << avgfps << std::endl;
-
-		for (System *system : systems) {
-			system->step(0xDEADBEEF);
-		}
-
-		// wait to limit framerate
-		duration = SDL_GetTicks() - start;
-		if (duration < FRAMEDURATION) {
-			SDL_Delay(FRAMEDURATION - duration);
-		}
-	}
+	manager.loop();
 
 	return 0;
 }
