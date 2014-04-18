@@ -5,7 +5,7 @@ class EventLoopSystem
 {
 public:
 	EventLoopSystem();
-	~EventLoopSystem ();
+	~EventLoopSystem();
 	void loop();
 };
 

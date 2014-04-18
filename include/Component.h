@@ -5,7 +5,8 @@
 
 class Component
 {
-	public:
+public:
+    virtual ~Component() {};
 };
 
 struct Graphics {

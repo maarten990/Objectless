@@ -1,7 +1,7 @@
 #ifndef GRAPHICSSYSTEM_H
 #define GRAPHICSSYSTEM_H value
 
-#include "SDL.h"
+#include <SDL.h>
 
 class GraphicsSystem
 {
