@@ -2,10 +2,12 @@
 #include <iostream>
 #include <vector>
 #include "GraphicsSystem.h"
-#include "KeyBoardInputSystem.h"
+#include "KeyBoardInputComponent.h"
 #include "EventSystem.h"
 #include "EntityManager.h"
 #include "SystemManager.h"
+#include <map>
+#include <functional>
 
 const int FPS = 60;
 const float FRAMEDURATION = (1.0 / 60) * 1000; // frame duration in ms
@@ -30,11 +32,6 @@ int main()
 	// TODO: this bool pointer that gets passed around to two classes sucks
 	bool running = true;
 
-	std::vector<System*> systems;
-
-	EventSystem loop(&running);
-	GraphicsSystem graphics;
-
     // Initialize entity manager and add first entity
     EntityManager e;
     std::vector<Component*> entity;
@@ -48,30 +45,10 @@ int main()
 
 	SystemManager manager(60, &running);
 
-    SDL_Event event;
+    manager.add( new GraphicsSystem() );
+    manager.add( new EventSystem(&running) );
 
-	while (running) {
-		start = SDL_GetTicks();
-		frames += 1;
-
-		float diff = SDL_GetTicks() - initial_ticks;
-		avgfps = (frames * 1000) / diff;
-		std::cout << "Average fps: " << avgfps << std::endl;
-
-		for (System *system : systems) {
-			system->step(0xDEADBEEF);
-		}
-        
-		// wait to limit framerate
-		duration = SDL_GetTicks() - start;
-		if (duration < FRAMEDURATION) {
-			SDL_Delay(FRAMEDURATION - duration);
-		}
-	}
-	manager.add( new GraphicsSystem() );
-	manager.add( new EventSystem(&running) );
-
-	manager.loop();
+    manager.loop();
 
 	return 0;
 }
