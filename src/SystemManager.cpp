@@ -9,6 +9,8 @@ SystemManager::SystemManager(int fps, bool *running)
 
 SystemManager::~SystemManager()
 {
+	for (System *system : _systems)
+		delete system;
 }
 
 void SystemManager::add(System *system)

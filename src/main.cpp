@@ -19,13 +19,10 @@ int main()
 	// TODO: this bool pointer that gets passed around to two classes sucks
 	bool running = true;
 
-	EventSystem loop(&running);
-	GraphicsSystem graphics;
-
 	SystemManager manager(60, &running);
 
-	manager.add(&loop);
-	manager.add(&graphics);
+	manager.add( new GraphicsSystem() );
+	manager.add( new EventSystem(&running) );
 
 	manager.loop();
 

@@ -3,6 +3,7 @@
 
 class System {
 public:
+	virtual ~System() {};
 	virtual void step(unsigned int dt) = 0;
 };
 

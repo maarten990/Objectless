@@ -6,7 +6,9 @@ public:
 	SystemManager(int fps, bool *running);
 	~SystemManager();
 
-	/* add a system */
+	/* Add a system.
+	 * The argument should be a pointer to a heap-allocated system.
+	 * The pointer will be freed in SystemManager's destructor. */
 	void add(System *system);
 
 	/* Enter a loop which calls each system's step function at a fixed
