@@ -4,6 +4,8 @@
 #include <iostream>
 #include "Component.h"
 
+using namespace std;
+
 class EntityManager
 {
 public:
