@@ -1,7 +1,6 @@
 #include <SDL.h>
 #include "GraphicsSystem.h"
 #include "Entity.h"
-#include <iostream>
 
 Uint32 graphics_callback(Uint32 interval, void *graphics)
 {

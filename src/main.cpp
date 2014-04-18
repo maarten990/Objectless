@@ -5,7 +5,7 @@
 #include "KeyBoardInputSystem.h"
 #include "EventSystem.h"
 #include "EntityManager.h"
-#include "KeyBoardInputComponent.h"
+#include "SystemManager.h"
 
 const int FPS = 60;
 const float FRAMEDURATION = (1.0 / 60) * 1000; // frame duration in ms
@@ -27,6 +27,7 @@ int main()
 	}
 
 	// create systems
+	// TODO: this bool pointer that gets passed around to two classes sucks
 	bool running = true;
 
 	std::vector<System*> systems;
@@ -45,15 +46,7 @@ int main()
 
     e.entityFactory(entity);
 
-	systems.push_back(&loop);
-	systems.push_back(&graphics);
-
-	// main loop
-	int frames = 0;
-	float avgfps = 0;
-	const Uint32 initial_ticks = SDL_GetTicks();
-	Uint32 start;
-	Uint32 duration;
+	SystemManager manager(60, &running);
 
     SDL_Event event;
 
@@ -75,6 +68,10 @@ int main()
 			SDL_Delay(FRAMEDURATION - duration);
 		}
 	}
+	manager.add( new GraphicsSystem() );
+	manager.add( new EventSystem(&running) );
+
+	manager.loop();
 
 	return 0;
 }
