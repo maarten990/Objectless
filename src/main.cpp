@@ -2,11 +2,19 @@
 #include <iostream>
 #include <vector>
 #include "GraphicsSystem.h"
+#include "KeyBoardInputSystem.h"
 #include "EventSystem.h"
 #include "EntityManager.h"
+#include "KeyBoardInputComponent.h"
 
 const int FPS = 60;
 const float FRAMEDURATION = (1.0 / 60) * 1000; // frame duration in ms
+
+
+void test_function()
+{
+    std::cout<<"The right button was pressed"<<std::endl;;
+}
 
 int main()
 {
@@ -26,7 +34,16 @@ int main()
 	EventSystem loop(&running);
 	GraphicsSystem graphics;
 
-    EntityManager entities();
+    // Initialize entity manager and add first entity
+    EntityManager e;
+    std::vector<Component*> entity;
+    std::map<SDL_Keycode, std::function<void()>> keys;
+    std::function<void()> test = test_function;
+    keys[SDLK_w] = test; 
+    KeyboardInput k(keys);
+    entity.push_back(&k);
+
+    e.entityFactory(entity);
 
 	systems.push_back(&loop);
 	systems.push_back(&graphics);
@@ -37,6 +54,8 @@ int main()
 	const Uint32 initial_ticks = SDL_GetTicks();
 	Uint32 start;
 	Uint32 duration;
+
+    SDL_Event event;
 
 	while (running) {
 		start = SDL_GetTicks();
@@ -49,7 +68,7 @@ int main()
 		for (System *system : systems) {
 			system->step(0xDEADBEEF);
 		}
-
+        
 		// wait to limit framerate
 		duration = SDL_GetTicks() - start;
 		if (duration < FRAMEDURATION) {

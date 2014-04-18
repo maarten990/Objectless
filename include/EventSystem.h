@@ -2,6 +2,7 @@
 #define EVENTSYSTEM_H value
 
 #include "System.h"
+#include "KeyBoardInputSystem.h"
 
 class EventSystem : public System
 {
@@ -10,6 +11,7 @@ public:
 	~EventSystem();
 	void step(unsigned int dt);
 	bool *running;
+    KeyBoardInputSystem keyinput;
 };
 
 #endif

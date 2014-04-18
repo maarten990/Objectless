@@ -11,7 +11,7 @@ class KeyBoardInputSystem
 public:
 	KeyBoardInputSystem();
 	~KeyBoardInputSystem();
-    void handleKeyEvent(SDL_KeyboardEvent keyEvent, vector<vector<Component>> entities);
+    void handleKeyEvent(SDL_Keycode k);
 
 };
 

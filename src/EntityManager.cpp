@@ -1,8 +1,11 @@
 #include "Component.h"
 #include "EntityManager.h"
 #include <iostream>
+#include "KeyBoardInputComponent.h"
 #include <vector>
-void EntityManager::EntityFactory(vector<Component> entity)
+
+vector<vector<Component*>> entities;
+void EntityManager::entityFactory(vector<Component*> entity)
 {
     // Add entity to the vector of entities
     entities.push_back(entity);
