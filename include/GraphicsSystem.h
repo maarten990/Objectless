@@ -2,12 +2,14 @@
 #define GRAPHICSSYSTEM_H value
 
 #include "SDL.h"
+#include "System.h"
 
-class GraphicsSystem
+class GraphicsSystem : public System
 {
 public:
 	GraphicsSystem();
 	~GraphicsSystem();
+	void step(unsigned int dt);
 
 private:
 	SDL_Window *_window;
