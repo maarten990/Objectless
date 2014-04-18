@@ -3,6 +3,7 @@
 #include <vector>
 #include "GraphicsSystem.h"
 #include "EventSystem.h"
+#include "Component.h"
 
 const int FPS = 60;
 const float FRAMEDURATION = (1.0 / 60) * 1000; // frame duration in ms
@@ -24,6 +25,8 @@ int main()
 
 	EventSystem loop(&running);
 	GraphicsSystem graphics;
+
+    
 
 	systems.push_back(&loop);
 	systems.push_back(&graphics);
