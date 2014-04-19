@@ -28,9 +28,8 @@ int main()
 		return -1;
 	}
 
-	// create systems
-	// TODO: this bool pointer that gets passed around to two classes sucks
-	bool running = true;
+    // TODO: this bool pointer that gets passed around to two classes sucks
+    bool running = true;
 
     // Initialize entity manager and add first entity
     EntityManager e;
@@ -43,12 +42,12 @@ int main()
 
     e.entityFactory(entity);
 
-	SystemManager manager(60, &running);
+    SystemManager manager(60, &running);
 
     manager.add( new GraphicsSystem() );
     manager.add( new EventSystem(&running) );
 
     manager.loop();
 
-	return 0;
+    return 0;
 }
