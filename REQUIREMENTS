@@ -1,1 +1,2 @@
-- SDL2
+-SDL2
+-libsdl-image1.2-dev (SDL_image 2)
