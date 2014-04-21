@@ -82,5 +82,6 @@ void GraphicsSystem::step(unsigned int dt)
             }
 	    }
 	}
+     
     SDL_RenderPresent(_renderer);
 }
