@@ -1,21 +1,35 @@
 #ifndef ENTITYMANAGER_H
 #define ENTITYMANAGER_H
-#include <vector>
-#include <iostream>
+#include <map>
 #include "Component.h"
 
 using namespace std;
 
-extern vector<vector<Component*>> entities;
-
 class EntityManager
 {
 public:
-    // TODO instead of specifying each entity by its component create an id for
-    // each entity that specifies for each component if it is on or off
+    EntityManager();
+    ~EntityManager();
 
-    // adds an entity, expressed by its components, to the list of entities
-    void entityFactory(vector<Component*> entity);
+    /* Adds an entity and returns a unique integer by which to identify it.
+     * The id is a combination of component ids which can be OR'd together.
+     */
+    int add(const char *entity);
+
+    /* Remove the specified entity and deallocate its memory. */
+    void remove(unsigned int id);
+
+    int num_components;
+
+private:
+    /* entities are stored with their components in a database-like table, where
+     * rows are entities and columns are components.
+     * e.g. _entities[entity][component_id] will return a pointer to a
+     * component of type component_id possessed by a certain entity; if the
+     * entity does not contain such a component, NULL is returned.
+     */
+      map<unsigned int, Component**> _entities;
+      unsigned int _next_index;
 };
 
 #endif
