@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include "GraphicsSystem.h"
+#include <iostream>
 
 class Component
 {
