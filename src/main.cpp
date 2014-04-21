@@ -33,7 +33,7 @@ int main()
     // TODO: this bool pointer that gets passed around to two classes sucks
     bool running = true;
 
-    GraphicsSystem graphics;
+    GraphicsSystem* graphics = new GraphicsSystem();
 
     // Initialize entity manager and add first entity
     EntityManager e;
@@ -44,7 +44,7 @@ int main()
     KeyboardInput k(keys);
     entity.push_back(&k);
 
-    SDL_Texture* t = graphics.loadTexture("../images/ball.bmp");
+    SDL_Texture* t = graphics->loadTexture("../images/ball.bmp");
     // Add graphics component as well to our entity
     Graphics g(t);
     Position p;
@@ -59,10 +59,12 @@ int main()
 
     SystemManager manager(60, &running);
 
-    manager.add( &graphics);
+    manager.add( graphics);
     manager.add( new EventSystem(&running) );
 
     manager.loop();
+
+	SDL_Quit();
 
     return 0;
 }

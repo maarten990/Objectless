@@ -32,10 +32,12 @@ GraphicsSystem::GraphicsSystem()
 }
 
 
+
 GraphicsSystem::~GraphicsSystem()
 {
 	SDL_DestroyWindow(_window);
-	SDL_Quit();
+    SDL_DestroyRenderer(_renderer);
+
 }
 
 
@@ -70,7 +72,6 @@ SDL_Texture* GraphicsSystem::loadTexture(string path)
 void GraphicsSystem::step(unsigned int dt)
 {
 
-    SDL_Surface* screenSurface = SDL_GetWindowSurface(_window);
     //SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
 	// Loop throug entities. retrieve position adn graphics component and
 	// draw texture to screen
