@@ -2,7 +2,7 @@
 #define EVENTSYSTEM_H value
 
 #include "System.h"
-#include "KeyBoardInputSystem.h"
+#include "SDL.h"
 
 class EventSystem : public System
 {
@@ -11,7 +11,7 @@ public:
 	~EventSystem();
 	void step(unsigned int dt);
 	bool *running;
-    KeyBoardInputSystem keyinput;
+	void handle_keyevent(SDL_Keycode k);
 };
 
 #endif

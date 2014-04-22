@@ -72,17 +72,16 @@ SDL_Texture* GraphicsSystem::loadTexture(string path)
 void GraphicsSystem::step(unsigned int dt)
 {
 
-    //SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
-	// Loop throug entities. retrieve position adn graphics component and
-	// draw texture to screen
-	for (int i = 0; i < entities.size(); i ++) {
-	    for (int j = 0; j < entities[i].size(); j ++) {
-            if (Graphics* g = dynamic_cast<Graphics*>(entities[i][j])) {
-                SDL_RenderCopy(_renderer, g->texture, NULL, NULL);  
-                SDL_GetError();
-            }
-	    }
-	}
-     
+    /* TODO: add a correspondence between components with the same entity, use
+     * Position */
+    for (Component *component : _components) {
+        if (typeid(*component) == typeid(Graphics)) {
+            Graphics *g = static_cast<Graphics*>(component);
+
+            SDL_RenderCopy(_renderer, g->texture, NULL, NULL);  
+            SDL_GetError();
+        }
+    }
+
     SDL_RenderPresent(_renderer);
 }

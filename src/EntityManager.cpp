@@ -1,42 +1,36 @@
+#include <typeinfo>
+#include <typeindex>
+#include <vector>
 #include "Component.h"
 #include "EntityManager.h"
+#include "ComponentManager.h"
 
-EntityManager::EntityManager()
+EntityManager::EntityManager(ComponentManager *mgr)
 {
-    num_components = 2;
+    _next_id = 0;
+    _component_mgr = mgr;
 }
 
 EntityManager::~EntityManager()
 {
-    /* deallocate each entity and its components */
-    for (auto keyval : _entities) {
-        this->remove(keyval.first);
-    }
 }
 
-int EntityManager::add(const char *entity)
+unsigned int EntityManager::add(std::vector<type_index> types)
 {
-    _entities[_next_index] = new Component*[num_components];
-    
-    for (int i = 0; i < num_components; ++i) {
-        if (entity[i] != '0') {
-            // TODO: construct component
-        } else {
-            _entities[_next_index][i] = NULL;
-        }
+    for (auto &type : types) {
+        _entities[_next_id][type] = _component_mgr->construct(type);
     }
 
-    _next_index += 1;
-    return _next_index - 1;
+    _next_id += 1;
+    return _next_id - 1;
 }
 
 void EntityManager::remove(unsigned int id)
 {
-    for (int i = 0; i < num_components; ++i) {
-        if (_entities[id][i] != NULL) {
-            delete _entities[id][i];
-        }
-    }
-
     _entities.erase(id);
+}
+
+Component *EntityManager::get(unsigned int id, type_index component)
+{
+    return _entities[id][component];
 }

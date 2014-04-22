@@ -18,18 +18,28 @@ public:
     type_index get_id() {
         return typeid(*this);
     }
-    virtual ~Component() {};
+    virtual ~Component() {}
 };
 
 struct Graphics : Component {
+	Graphics()
+	{
+	}
+
 	Graphics(SDL_Texture *texture)
        	{
 	    this->texture = texture;
-	};
+	}
+
 	~Graphics() 
 	{
 	    SDL_DestroyTexture(texture);
-	};
+	}
+
+	static type_index id() {
+	    return typeid(Graphics);
+	}
+
 	SDL_Texture *texture;
 };
 
@@ -37,6 +47,10 @@ struct Position : Component {
 	float x;
 	float y;
 	float rotation;
+
+	static type_index id() {
+	    return typeid(Position);
+	}
 };
 
 #endif
