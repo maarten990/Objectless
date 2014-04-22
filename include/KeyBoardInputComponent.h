@@ -1,8 +1,8 @@
 #ifndef KEYBOARDINPUTCOMPONENT_H
 #define KEYBOARDINPUTCOMPONENT_H
 #include <SDL.h>
-#include <iostream>
-#include <functional>
+#include <typeindex>
+#include <typeinfo>
 #include <map>
 #include "Component.h"
 
@@ -13,8 +13,13 @@ using namespace std;
 
 struct KeyboardInput : public Component {
 
+    KeyboardInput() {}
     KeyboardInput(map<SDL_Keycode, std::function<void()>> keys) {
         keybinds = keys;
+    }
+
+    static type_index id() {
+        return typeid(KeyboardInput);
     }
 
     // Map contains possible key presses and their consequence (function
