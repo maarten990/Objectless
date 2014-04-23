@@ -29,8 +29,3 @@ void EntityManager::remove(unsigned int id)
 {
     _entities.erase(id);
 }
-
-Component *EntityManager::get(unsigned int id, type_index component)
-{
-    return _entities[id][component];
-}

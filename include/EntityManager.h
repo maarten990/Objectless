@@ -22,8 +22,11 @@ public:
     /* Remove the specified entity and deallocate its memory. */
     void remove(unsigned int id);
 
-    /* returns a pointer to a given entity */
-    Component *get(unsigned int id, type_index component);
+    /* returns a pointer to a component belonging to a given entity */
+    template <typename T>
+    T *get(unsigned int entity_id) {
+        return static_cast<T*>(_entities[entity_id][T::id()]);
+    }
 
 private:
     /* entities are stored with their components in a database-like table, where

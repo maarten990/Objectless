@@ -62,15 +62,15 @@ int main()
     std::vector<type_index> player_components = {KeyboardInput::id(), Graphics::id(), Position::id()};
     unsigned int player = e.add(player_components);
 
-    static_cast<KeyboardInput*>(e.get(player, KeyboardInput::id()))->keybinds = keys;
+    e.get<KeyboardInput>(player)->keybinds = keys;
 
     /* graphics stuff */
     SDL_Texture* t = graphics->loadTexture("../images/ball.bmp");
-    static_cast<Graphics*>(e.get(player, Graphics::id()))->texture = t;
+    e.get<Graphics>(player)->texture = t;
 
-    static_cast<Position*>(e.get(player, Position::id()))->x = 5;
-    static_cast<Position*>(e.get(player, Position::id()))->y = 5;
-    static_cast<Position*>(e.get(player, Position::id()))->rotation = 0;
+    e.get<Position>(player)->x = 5;
+    e.get<Position>(player)->y = 5;
+    e.get<Position>(player)->rotation = 0;
 
     manager.add(graphics);
     manager.add(events);
