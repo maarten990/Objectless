@@ -1,7 +1,6 @@
 #ifndef COMPONENT_H
-#define COMPONENT_H value
+#define COMPONENT_H
 
-#include "GraphicsSystem.h"
 #include <SDL.h>
 #include <map>
 #include <string>

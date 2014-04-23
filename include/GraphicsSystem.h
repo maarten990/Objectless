@@ -1,8 +1,8 @@
 #ifndef GRAPHICSSYSTEM_H
-#define GRAPHICSSYSTEM_H value
+#define GRAPHICSSYSTEM_H
 #include <SDL.h>
-#include "System.h"
 #include <iostream>
+#include "System.h"
 
 class GraphicsSystem : public System
 {
