@@ -9,12 +9,6 @@ ComponentManager::~ComponentManager()
 {
 }
 
-void ComponentManager::register_component(type_index type,
-		function<Component*()> func)
-{
-	_constructors[type] = func;
-}
-
 Component *ComponentManager::construct(type_index type)
 {
 	Component *component = _constructors[type]();

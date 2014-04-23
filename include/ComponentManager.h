@@ -15,8 +15,12 @@ class ComponentManager {
 public:
 	ComponentManager();
 	~ComponentManager();
-	void register_component(type_index type,
-			function<Component*()> func);
+
+	template <typename T>
+	void register_component() {
+		_constructors[T::id()] = []() { return new T(); };
+	}
+
 	Component *construct(type_index type);
 
 	void register_system(System *system, type_index type);

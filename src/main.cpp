@@ -24,20 +24,9 @@ void test_function()
 
 void initialize_components(ComponentManager *mgr)
 {
-    mgr->register_component(KeyboardInput::id(),
-            []() {
-                return new KeyboardInput();
-            });
-
-    mgr->register_component(Graphics::id(),
-	    []() {
-                return new Graphics();
-	    });
-
-    mgr->register_component(Position::id(),
-	    []() {
-                return new Position();
-	    });
+    mgr->register_component<KeyboardInput>();
+    mgr->register_component<Graphics>();
+    mgr->register_component<Position>();
 }
 
 int main()
