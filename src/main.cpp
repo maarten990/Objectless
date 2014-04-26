@@ -1,14 +1,18 @@
 #include <SDL.h>
 #include <iostream>
 #include <vector>
+#include <map>
+#include <functional>
+
+#include "Engine/EntityManager.h"
+#include "Engine/SystemManager.h"
+#include "Engine/ComponentManager.h"
+
+#include "Components.h"
 #include "GraphicsSystem.h"
 #include "KeyBoardInputComponent.h"
 #include "EventSystem.h"
-#include "EntityManager.h"
-#include "SystemManager.h"
-#include "ComponentManager.h"
-#include <map>
-#include <functional>
+
 #define SCREEN_WIDTH 100
 #define SCREEN_HEIGHT 100
 

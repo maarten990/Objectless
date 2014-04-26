@@ -1,8 +1,9 @@
 #include <SDL.h>
 #include <SDL_image.h>
+
 #include "GraphicsSystem.h"
-#include "EntityManager.h"
-#include "Component.h"
+#include "Components.h"
+#include "Engine/EntityManager.h"
 
 Uint32 graphics_callback(Uint32 interval, void *graphics)
 {
@@ -35,8 +36,7 @@ GraphicsSystem::GraphicsSystem()
 GraphicsSystem::~GraphicsSystem()
 {
 	SDL_DestroyWindow(_window);
-    SDL_DestroyRenderer(_renderer);
-
+	SDL_DestroyRenderer(_renderer);
 }
 
 

@@ -1,24 +1,8 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#ifndef _COMPONENTS_H
+#define _COMPONENTS_H
 
-#include <SDL.h>
-#include <map>
-#include <string>
-#include <functional>
-#include <typeindex>
-#include <typeinfo>
-
-using namespace std;
-
-class Component
-{
-public:
-    static map<int, function<Component*(void*)> > factory;
-    type_index get_id() {
-        return typeid(*this);
-    }
-    virtual ~Component() {}
-};
+#include "SDL.h"
+#include "Engine/Component.h"
 
 struct Graphics : Component {
 	Graphics()

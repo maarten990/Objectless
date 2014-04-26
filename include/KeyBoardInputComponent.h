@@ -1,10 +1,12 @@
 #ifndef KEYBOARDINPUTCOMPONENT_H
 #define KEYBOARDINPUTCOMPONENT_H
+
 #include <SDL.h>
 #include <typeindex>
 #include <typeinfo>
 #include <map>
-#include "Component.h"
+
+#include "Engine/Component.h"
 
 using namespace std;
 

@@ -1,8 +1,8 @@
 #ifndef EVENTSYSTEM_H
 #define EVENTSYSTEM_H value
 
-#include "System.h"
-#include "SDL.h"
+#include <SDL.h>
+#include "Engine/System.h"
 
 class EventSystem : public System
 {

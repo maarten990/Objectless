@@ -1,8 +1,10 @@
 #ifndef GRAPHICSSYSTEM_H
 #define GRAPHICSSYSTEM_H
+
 #include <SDL.h>
 #include <iostream>
-#include "System.h"
+
+#include "Engine/System.h"
 
 class GraphicsSystem : public System
 {

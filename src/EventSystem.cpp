@@ -1,9 +1,10 @@
 #include <SDL.h>
 #include <vector>
 #include <typeinfo>
+
+#include "Engine/EntityManager.h"
 #include "EventSystem.h"
 #include "KeyBoardInputComponent.h"
-#include "EntityManager.h"
 
 EventSystem::EventSystem(bool *running)
 {
