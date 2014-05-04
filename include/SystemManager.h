@@ -1,9 +1,10 @@
 #include "System.h"
 #include <vector>
+#include "EntityManager.h"
 
 class SystemManager {
 public:
-	SystemManager(int fps, bool *running);
+	SystemManager(int fps, bool *running, EntityManager *entity_manager);
 	~SystemManager();
 
 	/* Add a system.
@@ -26,4 +27,8 @@ private:
 
 	/* the frame duration in milliseconds */
 	float _frametime;
+
+    EntityManager *_entity_manager;
+
+
 };

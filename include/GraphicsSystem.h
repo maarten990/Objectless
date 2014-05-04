@@ -10,7 +10,7 @@ public:
 	GraphicsSystem();
 	~GraphicsSystem();
 	SDL_Texture* loadTexture(std::string path);
-	void step(unsigned int dt);
+	void step(unsigned int dt, EntityManager* em);
 
 private:
 	SDL_Window *_window;

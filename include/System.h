@@ -4,26 +4,29 @@
 #include <vector>
 #include "Component.h"
 
+class EntityManager;
+
+
 class System {
 public:
 	virtual ~System() {};
-	virtual void step(unsigned int dt) = 0;
+	virtual void step(unsigned int dt, EntityManager* em) = 0;
 
-	void notify_created(Component *component) {
-		_components.push_back(component);
+	void notify_created(unsigned int entity) {
+		_entities.push_back(entity);
 	}
 
-	void notify_destroyed(Component *removed) {
-		for (auto component = _components.begin();
-				component != _components.end(); ++component) {
-			if (*component == removed) {
-				_components.erase(component);
+	void notify_destroyed(unsigned int removed_entity) {
+		for (auto entity = _entities.begin();
+				entity != _entities.end(); ++entity) {
+			if (*entity == removed_entity) {
+				_entities.erase(entity);
 			}
 		}
 	}
 
 protected:
-	std::vector<Component*> _components;
+	std::vector<unsigned int> _entities;
 };
 
 #endif

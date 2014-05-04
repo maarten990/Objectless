@@ -1,7 +1,9 @@
 #include <SDL.h>
 #include "SystemManager.h"
+#include "EntityManager.h"
 
-SystemManager::SystemManager(int fps, bool *running)
+SystemManager::SystemManager(int fps, bool *running, EntityManager *em)
+    :_entity_manager(em)
 {
 	_running = running;
 	_frametime = (1.0 / fps) * 1000;
@@ -45,7 +47,7 @@ void SystemManager::loop()
 
 		// call systems
 		for (System *system : _systems) {
-			system->step(ticks - prev_ticks);
+			system->step(ticks - prev_ticks, _entity_manager);
 			prev_ticks = ticks;
 		}
 

@@ -50,7 +50,6 @@ int main()
 
     // TODO: this bool pointer that gets passed around to two classes sucks
     bool running = true;
-    SystemManager manager(60, &running);
 
     GraphicsSystem *graphics = new GraphicsSystem();
     EventSystem *events = new EventSystem(&running);
@@ -71,6 +70,8 @@ int main()
     e.get<Position>(player)->x = 5;
     e.get<Position>(player)->y = 5;
     e.get<Position>(player)->rotation = 0;
+
+    SystemManager manager(60, &running, &e);
 
     manager.add(graphics);
     manager.add(events);

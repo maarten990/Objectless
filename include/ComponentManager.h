@@ -21,9 +21,9 @@ public:
 		_constructors[T::id()] = []() { return new T(); };
 	}
 
-	Component *construct(type_index type);
+	Component *construct(type_index type, unsigned int id);
 
-	void register_system(System *system, type_index type);
+	 void register_system(System* system, type_index type);
 	
 private:
 	map<type_index, function<Component*()> > _constructors;

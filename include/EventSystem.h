@@ -9,9 +9,9 @@ class EventSystem : public System
 public:
 	EventSystem(bool *running);
 	~EventSystem();
-	void step(unsigned int dt);
+	void step(unsigned int dt, EntityManager* em);
 	bool *running;
-	void handle_keyevent(SDL_Keycode k);
+	void handle_keyevent(SDL_Keycode k, EntityManager* em);
 };
 
 #endif

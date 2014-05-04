@@ -68,19 +68,17 @@ SDL_Texture* GraphicsSystem::loadTexture(string path)
     return loadedTexture;
 }
 
-
-void GraphicsSystem::step(unsigned int dt)
+void GraphicsSystem::step(unsigned int dt, EntityManager* em)
 {
 
     /* TODO: add a correspondence between components with the same entity, use
      * Position */
-    for (Component *component : _components) {
-        if (typeid(*component) == typeid(Graphics)) {
-            Graphics *g = static_cast<Graphics*>(component);
-
+    for (unsigned int id: _entities) {
+            // Retrieve the Graphics and Position component
+            Graphics *g = em->get<Graphics>(id);
+            Position *p = em->get<Position>(id);
             SDL_RenderCopy(_renderer, g->texture, NULL, NULL);  
             SDL_GetError();
-        }
     }
 
     SDL_RenderPresent(_renderer);
