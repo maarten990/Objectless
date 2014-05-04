@@ -66,9 +66,12 @@ int main()
     /* graphics stuff */
     SDL_Texture* t = graphics->loadTexture("../images/ball.bmp");
     e.get<Graphics>(player)->texture = t;
+    /* TODO: extract this info during texture creation */
+    e.get<Graphics>(player)->width = 20;
+    e.get<Graphics>(player)->height = 20;
 
-    e.get<Position>(player)->x = 5;
-    e.get<Position>(player)->y = 5;
+    e.get<Position>(player)->x = 50;
+    e.get<Position>(player)->y = 75;
     e.get<Position>(player)->rotation = 0;
 
     SystemManager manager(60, &running, &e);

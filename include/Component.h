@@ -40,6 +40,8 @@ struct Graphics : Component {
 	}
 
 	SDL_Texture *texture;
+	int width;
+	int height;
 };
 
 struct Position : Component {
