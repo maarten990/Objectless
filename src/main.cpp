@@ -43,11 +43,6 @@ int main()
     initialize_components(&component_mgr);
     EntityManager e(&component_mgr);
 
-    std::map<SDL_Keycode, std::function<void()>> keys;
-    std::function<void()> test = test_function;
-    keys[SDLK_w] = test; 
-
-
     // TODO: this bool pointer that gets passed around to two classes sucks
     bool running = true;
 
@@ -61,8 +56,6 @@ int main()
     std::vector<type_index> player_components = {KeyboardInput::id(), Graphics::id(), Position::id()};
     unsigned int player = e.add(player_components);
 
-    e.get<KeyboardInput>(player)->keybinds = keys;
-
     /* graphics stuff */
     SDL_Texture* t = graphics->loadTexture("../images/ball.bmp");
     e.get<Graphics>(player)->texture = t;
@@ -73,6 +66,14 @@ int main()
     e.get<Position>(player)->x = 50;
     e.get<Position>(player)->y = 75;
     e.get<Position>(player)->rotation = 0;
+
+    /* keyboard stuff */
+    std::map<SDL_Keycode, std::function<void()>> keys;
+    keys[SDLK_w] = [&e, &player]() {e.get<Position>(player)->y -= 5; }; 
+    keys[SDLK_a] = [&e, &player]() {e.get<Position>(player)->x -= 5; }; 
+    keys[SDLK_s] = [&e, &player]() {e.get<Position>(player)->y += 5; }; 
+    keys[SDLK_d] = [&e, &player]() {e.get<Position>(player)->x += 5; }; 
+    e.get<KeyboardInput>(player)->keybinds = keys;
 
     SystemManager manager(60, &running, &e);
 
