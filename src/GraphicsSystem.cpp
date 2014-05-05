@@ -84,6 +84,7 @@ void GraphicsSystem::step(unsigned int dt, EntityManager* em)
         dest.w = g->width;
         dest.h = g->height;
 
+        SDL_RenderClear(_renderer);
         SDL_RenderCopy(_renderer, g->texture, NULL, &dest);
         SDL_GetError();
     }
