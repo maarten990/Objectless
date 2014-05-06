@@ -27,5 +27,10 @@ unsigned int EntityManager::add(std::vector<type_index> types)
 
 void EntityManager::remove(unsigned int id)
 {
+    map<type_index, Component*> entity = _entities[id];
+    for (auto &component_pair : entity) {
+        delete component_pair.second;
+    }
+
     _entities.erase(id);
 }
