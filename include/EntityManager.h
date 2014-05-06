@@ -8,6 +8,8 @@
 
 using namespace std;
 
+/* Provies an interface to create, destroy or modify an entity and its
+ * components. */
 class EntityManager
 {
 public:
@@ -15,7 +17,8 @@ public:
     ~EntityManager();
 
     /* Adds an entity and returns a unique integer by which to identify it.
-     * The id is a combination of component ids which can be OR'd together.
+     * The argument consists of a vector of ids representing the components
+     * to be added to the entity.
      */
     unsigned int add(std::vector<type_index> types);
 
@@ -31,9 +34,11 @@ public:
 private:
     /* entities are stored with their components in a database-like table, where
      * rows are entities and columns are components.
-     * e.g. _entities[entity][component_id] will return a pointer to a
+     * e.g. _entities[entity_id][component_id] will return a pointer to a
      * component of type component_id possessed by a certain entity; if the
      * entity does not contain such a component, NULL is returned.
+     *
+     * The table is implemented as a nested dictionary.
      */
       map<unsigned int, map<type_index, Component*> > _entities;
       unsigned int _next_id;
