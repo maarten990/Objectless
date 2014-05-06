@@ -17,12 +17,7 @@ public:
 	}
 
 	void notify_destroyed(unsigned int removed_entity) {
-		for (auto entity = _entities.begin();
-				entity != _entities.end(); ++entity) {
-			if (*entity == removed_entity) {
-				_entities.erase(entity);
-			}
-		}
+		_entities.erase(removed_entity);
 	}
 
 protected:
