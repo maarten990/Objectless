@@ -2,6 +2,7 @@
 #define SYSTEM_H
 
 #include <vector>
+#include <algorithm>
 #include "Component.h"
 
 class EntityManager;
@@ -26,7 +27,8 @@ public:
 	 * system.
 	 * See also: ComponentManager::register */
 	void notify_destroyed(unsigned int removed_entity) {
-		_entities.erase(removed_entity);
+		_entities.erase(std::find(_entities.begin(), _entities.end(),
+					removed_entity));
 	}
 
 protected:
