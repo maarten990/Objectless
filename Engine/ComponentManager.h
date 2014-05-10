@@ -25,16 +25,10 @@ public:
 	}
 
 	/* Create a component of the given type, belonging to a given entity. */
-	Component *construct(type_index type, unsigned int id);
-
-	/* Register a system as being interested in a certain type of component. The
-	 * system will be notified when such a component is added to or removed from
-	 * a component. */
-	void register_system(System* system, type_index type);
+	Component *construct(type_index type);
 	
 private:
 	map<type_index, function<Component*()> > _constructors;
-	map<type_index, vector<System*> > _systems;
 };
 
 #endif

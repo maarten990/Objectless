@@ -53,9 +53,9 @@ int main()
     GraphicsSystem *graphics = new GraphicsSystem();
     EventSystem *events = new EventSystem(&running);
 
-    component_mgr.register_system(graphics, Graphics::id());
-    component_mgr.register_system(graphics, Position::id());
-    component_mgr.register_system(events, KeyboardInput::id());
+    /* register systems */
+    e.register_system(graphics, {Graphics::id(), Position::id()});
+    e.register_system(events, {KeyboardInput::id()});
 
     std::vector<type_index> player_components = {KeyboardInput::id(), Graphics::id(), Position::id()};
     unsigned int player = e.add(player_components);

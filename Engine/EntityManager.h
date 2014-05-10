@@ -1,6 +1,7 @@
 #ifndef ENTITYMANAGER_H
 #define ENTITYMANAGER_H
 #include <map>
+#include <vector>
 #include <typeinfo>
 #include <typeindex>
 #include "Component.h"
@@ -31,6 +32,12 @@ public:
         return static_cast<T*>(_entities[entity_id][T::id()]);
     }
 
+    /* Register a system as being interested in a certain combination of
+     * component. The system will be notified when an entity containing these
+     * components is created, destroyed, or has changed its component layout
+     * such that it no longer contains the required ones. */
+	void register_system(System* system, vector<type_index> components);
+
 private:
     /* entities are stored with their components in a database-like table, where
      * rows are entities and columns are components.
@@ -43,6 +50,7 @@ private:
       map<unsigned int, map<type_index, Component*> > _entities;
       unsigned int _next_id;
       ComponentManager *_component_mgr;
+      map<vector<type_index>, vector<System *> > _systems;
 };
 
 #endif
