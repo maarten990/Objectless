@@ -71,8 +71,6 @@ void GraphicsSystem::step(unsigned int dt, EntityManager* em)
 {
     SDL_RenderClear(_renderer);
 
-    /* TODO: add a correspondence between components with the same entity, use
-     * Position */
     for (unsigned int id: _entities) {
         Graphics *g = em->get<Graphics>(id);
         Position *p = em->get<Position>(id);
