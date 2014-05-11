@@ -69,6 +69,7 @@ SDL_Texture* GraphicsSystem::loadTexture(string path)
 
 void GraphicsSystem::step(unsigned int dt, EntityManager* em)
 {
+    SDL_RenderClear(_renderer);
 
     /* TODO: add a correspondence between components with the same entity, use
      * Position */
@@ -84,7 +85,6 @@ void GraphicsSystem::step(unsigned int dt, EntityManager* em)
         dest.w = g->width;
         dest.h = g->height;
 
-        SDL_RenderClear(_renderer);
         SDL_RenderCopy(_renderer, g->texture, NULL, &dest);
         SDL_GetError();
     }
