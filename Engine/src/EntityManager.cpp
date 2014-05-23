@@ -64,6 +64,46 @@ void EntityManager::remove(unsigned int id)
     _entities.erase(id);
 }
 
+void EntityManager::add_component(unsigned int id, type_index type)
+{
+    _entities[id][type] = _component_mgr->construct(type);
+
+    /* collect the entity's types */
+    set<type_index> types;
+    for (auto &pair : _entities[id]) {
+        types.insert(pair.first);
+    }
+
+    /* check if this this entity should now be added to new systems */
+    for (auto &system_pair : _systems) {
+        set<type_index> required = system_pair.first;
+        /* to prevent systems getting notified multiple times about the same
+         * entry, make sure that this is a new notification by checking that the
+         * newly added component is one of the required types */
+        if (compare(required, types) && required.find(type) != required.end()) {
+            for (System *system : system_pair.second) {
+                system->notify_created(id);
+            }
+        }
+    }
+
+    _entities[id].erase(type);
+}
+
+void EntityManager::remove_component(unsigned int id, type_index type)
+{
+    /* notify each system that requests this type about this entity losing it */
+    for (auto &system_pair : _systems) {
+        if (system_pair.first.find(type) != system_pair.first.end()) {
+            for (System *system : system_pair.second) {
+                system->notify_destroyed(id);
+            }
+        }
+    }
+
+    _entities[id].erase(type);
+}
+
 void EntityManager::register_system(System* system, set<type_index> components)
 {
 	_systems[components].insert(system);

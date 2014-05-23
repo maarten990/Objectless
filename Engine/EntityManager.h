@@ -26,6 +26,11 @@ public:
     /* Remove the specified entity and deallocate its memory. */
     void remove(unsigned int id);
 
+    /* Add or remove a component from an entity. Every entity is assumed to have
+     * a maximum of instance of each type of component. */
+    void add_component(unsigned int id, type_index type);
+    void remove_component(unsigned int id, type_index type);
+
     /* returns a pointer to a component belonging to a given entity */
     template <typename T>
     T *get(unsigned int entity_id) {
