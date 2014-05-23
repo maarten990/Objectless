@@ -1,6 +1,6 @@
 #include <SDL.h>
 #include <iostream>
-#include <vector>
+#include <set>
 #include <map>
 #include <functional>
 
@@ -57,7 +57,7 @@ int main()
     e.register_system(graphics, {Graphics::id(), Position::id()});
     e.register_system(events, {KeyboardInput::id()});
 
-    std::vector<type_index> player_components = {KeyboardInput::id(), Graphics::id(), Position::id()};
+    std::set<type_index> player_components = {KeyboardInput::id(), Graphics::id(), Position::id()};
     unsigned int player = e.add(player_components);
 
     /* graphics stuff */
