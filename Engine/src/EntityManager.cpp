@@ -86,8 +86,6 @@ void EntityManager::add_component(unsigned int id, type_index type)
             }
         }
     }
-
-    _entities[id].erase(type);
 }
 
 void EntityManager::remove_component(unsigned int id, type_index type)
