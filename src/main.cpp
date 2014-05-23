@@ -77,6 +77,17 @@ int main()
     keys[SDLK_a] = [&e, &player]() {e.get<Position>(player)->x -= 5; }; 
     keys[SDLK_s] = [&e, &player]() {e.get<Position>(player)->y += 5; }; 
     keys[SDLK_d] = [&e, &player]() {e.get<Position>(player)->x += 5; }; 
+    keys[SDLK_h] = [&t, &e, &player]() {
+        if (e.get<Graphics>(player))
+            e.remove_component(player, Graphics::id());
+        else {
+            e.add_component(player, Graphics::id());
+            e.get<Graphics>(player)->texture = t;
+            e.get<Graphics>(player)->width = 20;
+            e.get<Graphics>(player)->height = 20;
+        }
+    };
+
     e.get<KeyboardInput>(player)->keybinds = keys;
 
     SystemManager manager(60, &running, &e);
