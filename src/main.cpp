@@ -4,6 +4,10 @@
 #include <map>
 #include <functional>
 
+#ifdef __linux
+#include <unistd.h>
+#endif
+
 #include "Engine/EntityManager.h"
 #include "Engine/SystemManager.h"
 #include "Engine/ComponentManager.h"
@@ -12,6 +16,7 @@
 #include "GraphicsSystem.h"
 #include "KeyBoardInputComponent.h"
 #include "EventSystem.h"
+#include "REPLSystem.h"
 
 #define SCREEN_WIDTH 100
 #define SCREEN_HEIGHT 100
@@ -52,6 +57,7 @@ int main()
 
     GraphicsSystem *graphics = new GraphicsSystem();
     EventSystem *events = new EventSystem(&running);
+    REPLSystem *repl = new REPLSystem();
 
     /* register systems */
     e.register_system(graphics, {Graphics::id(), Position::id()});
@@ -94,6 +100,13 @@ int main()
 
     manager.add(graphics);
     manager.add(events);
+
+#ifdef __linux
+    /* add a REPL if the input is redirected */
+    if (!isatty(fileno(stdin))) {
+        manager.add(repl);
+    }
+#endif
 
     manager.loop();
 

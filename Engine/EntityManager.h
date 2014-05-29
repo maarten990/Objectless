@@ -4,6 +4,7 @@
 #include <set>
 #include <typeinfo>
 #include <typeindex>
+#include <string>
 #include "Component.h"
 #include "ComponentManager.h"
 
@@ -43,6 +44,9 @@ public:
      * components is created, destroyed, or has changed its component layout
      * such that it no longer contains the required ones. */
 	void register_system(System* system, set<type_index> components);
+
+    /* Return a pretty string containing info about an entity. */
+    string pretty(unsigned int id);
 
 private:
     /* compare two sets; return true if each element of 'available' occurs in

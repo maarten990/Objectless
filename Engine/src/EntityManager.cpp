@@ -3,6 +3,9 @@
 #include <set>
 #include <algorithm>
 #include <iterator>
+#include <string>
+#include <sstream>
+#include <iostream>
 #include "Component.h"
 #include "EntityManager.h"
 
@@ -132,4 +135,18 @@ void EntityManager::remove_component(unsigned int id, Component *address) {
 void EntityManager::register_system(System* system, set<type_index> components)
 {
 	_systems[components].insert(system);
+}
+
+
+string EntityManager::pretty(unsigned int id)
+{
+    ostringstream str;
+    str << "Entity " << id << ":\n";
+
+    for (auto type_ptr_pair : _entities[id]) {
+        str << "\t" << type_ptr_pair.first.name() << "\t" <<
+            type_ptr_pair.second << endl;
+    }
+
+    return str.str();
 }
