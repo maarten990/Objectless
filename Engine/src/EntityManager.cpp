@@ -56,6 +56,13 @@ unsigned int EntityManager::add(set<type_index> types)
 
 void EntityManager::remove(unsigned int id)
 {
+    /* notify each system that has a reference to this entity by
+     * TODO: maybe store some extra data so that this can be done more
+     * efficiently */
+    for (auto &type_ptr_pair : _entities[id]) {
+        remove_component(id, type_ptr_pair.first);
+    }
+
     map<type_index, Component*> entity = _entities[id];
     for (auto &component_pair : entity) {
         delete component_pair.second;

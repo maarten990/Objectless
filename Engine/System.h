@@ -27,8 +27,12 @@ public:
 	 * system.
 	 * See also: ComponentManager::register */
 	void notify_destroyed(unsigned int removed_entity) {
-		_entities.erase(std::find(_entities.begin(), _entities.end(),
-					removed_entity));
+		auto iterator = std::find(_entities.begin(), _entities.end(),
+				removed_entity);
+
+		/* make sure the entity is actually available */
+		if (iterator != _entities.end())
+			_entities.erase(iterator);
 	}
 
 protected:
