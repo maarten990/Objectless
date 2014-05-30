@@ -109,6 +109,26 @@ void EntityManager::remove_component(unsigned int id, type_index type)
     _entities[id].erase(type);
 }
 
+void EntityManager::remove_component(unsigned int id, Component *address) {
+    auto type_iter = find_if(_entities[id].begin(), _entities[id].end(),
+            [address](pair<type_index, Component*> e) {
+                return e.second == address;
+            });
+
+    type_index type = (*type_iter).first;
+
+    /* notify each system that requests this type about this entity losing it */
+    for (auto &system_pair : _systems) {
+        if (system_pair.first.find(type) != system_pair.first.end()) {
+            for (System *system : system_pair.second) {
+                system->notify_destroyed(id);
+            }
+        }
+    }
+
+    _entities[id].erase(type);
+}
+
 void EntityManager::register_system(System* system, set<type_index> components)
 {
 	_systems[components].insert(system);
