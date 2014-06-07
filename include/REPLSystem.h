@@ -3,8 +3,10 @@
 #include <map>
 #include <functional>
 #include <poll.h>
+#include <lua.hpp>
 #include "Engine/System.h"
 #include "Engine/EntityManager.h"
+#include "Engine/ComponentManager.h"
 
 using namespace std;
 
@@ -17,33 +19,16 @@ using namespace std;
 class REPLSystem : public System
 {
 public:
-	REPLSystem();
+	REPLSystem(EntityManager *em, ComponentManager *cm);
 	virtual ~REPLSystem();
 	void step(unsigned int dt, EntityManager* em);
 
 private:
-	/* Check if stdin is readable, and if so, read it and tokenize the input */
-	void tokenize_input();
-
-	/* Split a string at its spaces and insert each token into _messages */
-	void tokenize_into_queue(string msg);
-
-	/* Pop the head off _messages */
-	string pop_queue();
-
-	/* Execute a command according to the functions specified in _functions */
-	void parse(string cmd, EntityManager *em);
+	/* Check if stdin is readable, and if so, read it and return the input */
+	vector<string> get_input();
 
 	/* array to hold the file descriptors we want to poll */
 	struct pollfd poll_fds[1];
 
-	/* Queue holding the tokenized input.
-	 * e.g. an input of "foo bar baz" will push "foo", "bar" and "baz" into the
-	 * queue. */
-	queue<string> _messages;
-
-	/* A mapping of commands to functions.
-	 * Commands that take arguments will pop them off the queue themselves. 
-	 * Each function returns a string that gets printed to stdout. */
-	map<string, function<string(EntityManager *em)> > _functions;
+	lua_State *_L;
 };

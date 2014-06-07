@@ -1,50 +1,36 @@
-#include <iostream>
-#include <sstream>
 #include <string>
-#include <algorithm>
+#include <vector>
 #include <poll.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <lua.hpp>
 #include "REPLSystem.h"
+#include "lua_interface.h"
 
 using namespace std;
 
-REPLSystem::REPLSystem()
+#define LUA_GLOBAL_FUNCTION(state, func) \
+	lua_pushcfunction(state, func); \
+	lua_setglobal(state, #func);
+
+REPLSystem::REPLSystem(EntityManager *em, ComponentManager *cm)
 	: poll_fds { {.fd = STDIN_FILENO, .events = POLLIN} }
 {
-	_functions["print"] = [this](EntityManager *em) {
-		int entity = atoi(pop_queue().c_str());
-		return em->pretty(entity);
-	};
+	_L = luaL_newstate();
+	luaL_openlibs(_L);
 
-	_functions["remove"] = [this](EntityManager *em) {
-		string arg = pop_queue();
-		int entity = atoi(arg.c_str());
-		stringstream output;
+	/* add global entitymanager and componentmanager */
+	lua_pushlightuserdata(_L, em);
+	lua_setglobal(_L, "entity_manager");
 
-		em->remove(entity);
-		output << "Removed entity " << entity;
+	lua_pushlightuserdata(_L, cm);
+	lua_setglobal(_L, "component_manager");
 
-		return output.str();
-	};
-
-	_functions["rmcomp"] = [this](EntityManager *em) {
-		string entstr = pop_queue();
-		string compstr = pop_queue();
-		int entity;
-		Component *component;
-		char output[64];
-
-		entity = atoi(entstr.c_str());
-		sscanf(compstr.c_str(), "%lx", &component);
-
-		em->remove_component(entity, (Component *)component);
-		sprintf(output, "Removed component %#lx from entity %d\n", component,
-				entity);
-
-		return string(output, find(output, output + 64, '\0'));
-	};
+	/* register functions */
+	LUA_GLOBAL_FUNCTION(_L, entity_print);
+	LUA_GLOBAL_FUNCTION(_L, entity_remove);
+	LUA_GLOBAL_FUNCTION(_L, component_remove);
 }
 
 REPLSystem::~REPLSystem()
@@ -53,52 +39,29 @@ REPLSystem::~REPLSystem()
 
 void REPLSystem::step(unsigned int dt, EntityManager *em)
 {
-	tokenize_input();
+	vector<string> lines = get_input();
+	int error;
 
-	while (!_messages.empty()) {
-		string cmd = pop_queue();
-		parse(cmd, em);
+	for (string &line : lines) {
+		error = luaL_loadbuffer(_L, line.c_str(), line.size(), "input");
+		error |= lua_pcall(_L, 0, 0, 0);
+
+		if (error) {
+			printf("Error: %s\n", lua_tostring(_L, -1));
+			lua_pop(_L, 1);
+		}
 	}
 }
 
-void REPLSystem::tokenize_input()
+vector<string> REPLSystem::get_input()
 {
 	char cmd[256];
+	vector<string> lines;
 
 	if (poll(poll_fds, 1, 0) > 0 && (poll_fds[0].revents & POLLIN)) {
 		while (fgets(cmd, 256, stdin) != 0)
-			tokenize_into_queue(string(cmd));
+			lines.push_back(string(cmd));
 	}
-}
 
-void REPLSystem::tokenize_into_queue(string msg)
-{
-	char cstr[msg.length() + 1];
-	char delim[] = " ";
-	strcpy(cstr, msg.c_str());
-
-	char *tokens = strtok(cstr, delim);
-
-	while (tokens) {
-		_messages.push(string(tokens));
-		tokens = strtok(NULL, " ");
-	}
-}
-
-string REPLSystem::pop_queue()
-{
-	string str = _messages.front();
-
-	_messages.pop();
-	return str;
-}
-
-void REPLSystem::parse(string cmd, EntityManager *em)
-{
-	auto func_pair = _functions.find(cmd);
-	if (func_pair != _functions.end()) {
-		cout << func_pair->second(em) << endl;
-	} else {
-		cout << "Error: invalid function: " << cmd << endl;
-	}
+	return lines;
 }

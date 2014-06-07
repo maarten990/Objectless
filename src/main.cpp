@@ -57,7 +57,7 @@ int main()
 
     GraphicsSystem *graphics = new GraphicsSystem();
     EventSystem *events = new EventSystem(&running);
-    REPLSystem *repl = new REPLSystem();
+    REPLSystem *repl = new REPLSystem(&e, &component_mgr);
 
     /* register systems */
     e.register_system(graphics, {Graphics::id(), Position::id()});
