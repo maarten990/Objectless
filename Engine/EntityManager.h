@@ -31,7 +31,6 @@ public:
      * a maximum of instance of each type of component. */
     void add_component(unsigned int id, type_index type);
     void remove_component(unsigned int id, type_index type);
-    void remove_component(unsigned int id, Component *address);
 
     /* returns a pointer to a component belonging to a given entity */
     template <typename T>
