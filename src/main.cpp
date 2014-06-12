@@ -16,7 +16,10 @@
 #include "GraphicsSystem.h"
 #include "KeyBoardInputComponent.h"
 #include "EventSystem.h"
-#include "REPLSystem.h"
+
+#ifdef WITH_LUA
+#include "lua/REPLSystem.h"
+#endif
 
 #define SCREEN_WIDTH 100
 #define SCREEN_HEIGHT 100
@@ -57,7 +60,6 @@ int main()
 
     GraphicsSystem *graphics = new GraphicsSystem();
     EventSystem *events = new EventSystem(&running);
-    REPLSystem *repl = new REPLSystem(&e, &component_mgr);
 
     /* register systems */
     e.register_system(graphics, {Graphics::id(), Position::id()});
@@ -101,8 +103,9 @@ int main()
     manager.add(graphics);
     manager.add(events);
 
-#ifdef __linux
+#ifdef WITH_LUA
     /* add a REPL if the input is redirected */
+    REPLSystem *repl = new REPLSystem(&e, &component_mgr);
     if (!isatty(fileno(stdin))) {
         manager.add(repl);
     }
