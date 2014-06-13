@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <lua.hpp>
-#include "REPLSystem.h"
-#include "lua_interface.h"
+#include "lua/REPLSystem.h"
+#include "lua/lua_interface.h"
 
 using namespace std;
 
