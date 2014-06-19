@@ -4,6 +4,8 @@
 #include "GraphicsSystem.h"
 #include "Components.h"
 #include "Engine/EntityManager.h"
+#include "Assert.h"
+
 
 Uint32 graphics_callback(Uint32 interval, void *graphics)
 {
@@ -21,9 +23,8 @@ GraphicsSystem::GraphicsSystem()
 
     // Initialize the flags for image lib
     if(!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-    
-        SDL_GetError();
-        exit(0);
+			assert2(false, "IMG_Init failed!! %s", SDL_GetError());
+			exit(0);
     }
 
 	SDL_SetRenderDrawColor(_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
