@@ -1,13 +1,25 @@
 cmake_minimum_required(VERSION 2.6)
 project(Objectless)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/Engine)
-
 # find SDL
 if (UNIX)
     include(FindPkgConfig)
     pkg_check_modules(SDL2 REQUIRED sdl2 SDL2_image)
+else()
+    set(SDL2_LOCATION "${CMAKE_SOURCE_DIR}" CACHE FILEPATH
+        "The root folder of SDL2")
+    set(SDL2_IMAGE_LOCATION "${CMAKE_SOURCE_DIR}" CACHE FILEPATH
+        "The root folder of SDL2_image")
+
+    set(SDL2_LIBRARIES ${SDL2_LOCATION}/lib/x86/SDL2.lib
+                       ${SDL2_LOCATION}/lib/x86/SDL2main.lib)
+    set(SDL2_INCLUDE_DIRS ${SDL2_LOCATION}/include)
+
+    set(SDLIMG_LIBRARIES ${SDL2_IMAGE_LOCATION}/lib/x86/SDL2_image.lib)
+    set(SDLIMG_INCLUDE_DIRS ${SDL2_IMAGE_LOCATION}/include)
 endif(UNIX)
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/Engine)
 
 # find Lua
 find_package(Lua51)
@@ -17,7 +29,8 @@ endif()
 
 include_directories(${CMAKE_SOURCE_DIR}
                     ${CMAKE_SOURCE_DIR}/include
-                    ${SDL2_INCLUDE_DIRS})
+                    ${SDL2_INCLUDE_DIRS}
+                    ${SDLIMG_INCLUDE_DIRS})
 
 if (ENABLE_LUA)
     include_directories(${LUA_INCLUDE_DIR})
@@ -25,7 +38,9 @@ if (ENABLE_LUA)
 endif()
 
 # compiler settings
-add_definitions(-std=c++11)
+if (NOT WIN32)
+    add_definitions(-std=c++11)
+endif()
 
 # compiling
 file(GLOB SRC "src/*.cpp")
