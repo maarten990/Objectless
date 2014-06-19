@@ -44,11 +44,12 @@ endif()
 
 # compiling
 file(GLOB SRC "src/*.cpp")
+file(GLOB HEADERS "include/*.h")
 if (ENABLE_LUA)
     list(APPEND SRC "src/lua/REPLSystem.cpp")
 endif()
 
-add_executable(objectless ${SRC})
+add_executable(objectless ${SRC} ${HEADERS})
 target_link_libraries(objectless engine ${SDL2_LIBRARIES} ${SDLIMG_LIBRARIES})
 
 if (ENABLE_LUA)
