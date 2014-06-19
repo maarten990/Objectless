@@ -6,7 +6,7 @@ SystemManager::SystemManager(int fps, bool *running, EntityManager *em)
     :_entity_manager(em)
 {
 	_running = running;
-	_frametime = (1.0 / fps) * 1000;
+	_frametime = (1.0f / fps) * 1000;
 }
 
 SystemManager::~SystemManager()
@@ -34,7 +34,6 @@ void SystemManager::loop()
 	Uint32 ticks = 0;
 	Uint32 prev_ticks = SDL_GetTicks();
 	Uint32 duration;
-	Uint32 dt;
 	float diff;
 
 	while (*_running) {
@@ -42,7 +41,7 @@ void SystemManager::loop()
 		frames += 1;
 
 		// calculate average fps
-		diff = ticks - initial_ticks;
+		diff = (float)(ticks - initial_ticks);
 		avg_fps = (frames * 1000) / diff;
 
 		// call systems
@@ -54,7 +53,7 @@ void SystemManager::loop()
 		// limit framerate
 		duration = SDL_GetTicks() - ticks;
 		if (duration < _frametime) {
-			SDL_Delay(_frametime - duration);
+			SDL_Delay((Uint32)(_frametime - duration));
 		}
 	}
 }

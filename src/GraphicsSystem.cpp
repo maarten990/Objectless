@@ -78,8 +78,8 @@ void GraphicsSystem::step(unsigned int dt, EntityManager* em)
         /* create destination rect using the desired position 
          * and the texture's dimensions */
         SDL_Rect dest;
-        dest.x = p->x;
-        dest.y = p->y;
+        dest.x = (int)p->x;
+        dest.y = (int)p->y;
         dest.w = g->width;
         dest.h = g->height;
 
