@@ -13,13 +13,13 @@
 
 
 #ifndef NDEBUG
-#define assert2(condition, format, ...) \
+#define assert2(condition, ...) \
 do \
 { \
 	if (!(condition)) \
 	{ \
 		printf("Assertion failed: %s\n", #condition); \
-		printf((format), __VA_ARGS__); \
+		printf(__VA_ARGS__); \
 		printf("\nFile: %s:%i\nFunction: %s\n", __FILE__, __LINE__, FUNCTION_SIGNATURE); \
 		DEBUG_BREAK; \
 	} \
@@ -27,5 +27,5 @@ do \
 
 #else
 //The void casting prevents warnings about unused variables.
-#define assert2(condition, format, ...) ((void)(condition), (void)(format))
+#define assert2(condition, ...) ((void)(condition))
 #endif
