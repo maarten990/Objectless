@@ -12,7 +12,7 @@
 #endif
 
 
-#if _DEBUG
+#ifndef NDEBUG
 #define assert2(condition, format, ...) \
 do \
 { \
