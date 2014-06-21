@@ -5,7 +5,7 @@ project(Objectless)
 if (UNIX)
     include(FindPkgConfig)
     pkg_check_modules(SDL2 REQUIRED sdl2 SDL2_image)
-else()
+elseif(MSVC)
     set(SDL2_LOCATION "${CMAKE_SOURCE_DIR}" CACHE FILEPATH
         "The root folder of SDL2")
     set(SDL2_IMAGE_LOCATION "${CMAKE_SOURCE_DIR}" CACHE FILEPATH
