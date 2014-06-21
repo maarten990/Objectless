@@ -17,7 +17,14 @@ elseif(MSVC)
 
     set(SDLIMG_LIBRARIES ${SDL2_IMAGE_LOCATION}/lib/x86/SDL2_image.lib)
     set(SDLIMG_INCLUDE_DIRS ${SDL2_IMAGE_LOCATION}/include)
-endif(UNIX)
+
+# Force to always compile with W4
+    if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+        string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+    endif()
+endif()
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/Engine)
 
