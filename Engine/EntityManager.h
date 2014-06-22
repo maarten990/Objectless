@@ -10,7 +10,7 @@
 
 using namespace std;
 
-/* Provies an interface to create, destroy or modify an entity and its
+/* Provides an interface to create, destroy or modify an entity and its
  * components. */
 class EntityManager
 {
@@ -35,7 +35,7 @@ public:
     /* returns a pointer to a component belonging to a given entity */
     template <typename T>
     T *get(unsigned int entity_id) {
-        return static_cast<T*>(_entities[entity_id][T::id()]);
+			return static_cast<T*>(find_component(entity_id, T::id()));
     }
 
     /* Register a system as being interested in a certain combination of
@@ -51,6 +51,10 @@ private:
     /* compare two sets; return true if each element of 'available' occurs in
      * 'required' */
     bool compare(set<type_index> required, set<type_index> available);
+
+		/* Find component belonging to the specified entity. Returns null if the entity
+		 * does not have a component of that type. */
+		Component* find_component(unsigned int entity_id, type_index component_type);
 
     /* entities are stored with their components in a database-like table, where
      * rows are entities and columns are components.

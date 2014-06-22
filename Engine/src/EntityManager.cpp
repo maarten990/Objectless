@@ -130,3 +130,18 @@ string EntityManager::pretty(unsigned int id)
 
     return str.str();
 }
+
+Component* EntityManager::find_component(unsigned int entity_id, type_index component_type)
+{
+	auto entity = _entities.find(entity_id);
+	if (entity == std::end(_entities)) {
+		return nullptr;
+	}
+
+	auto component = entity->second.find(component_type);
+	if (component == std::end(entity->second)) {
+		return nullptr;
+	}
+
+	return component->second;
+}
