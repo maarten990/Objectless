@@ -9,6 +9,6 @@ if (NOT WIN32)
 endif()
 
 file(GLOB SRC "src/*.cpp")
-file(GLOB HEADERS "include/*.h")
+file(GLOB HEADERS "*.h")
 add_library(engine STATIC ${SRC} ${HEADERS})
 target_link_libraries(engine ${SDL2_LIBRARIES})
