@@ -12,9 +12,9 @@ class System {
 public:
 	virtual ~System() {};
 
-	/* Performs one frame worth of calculations. Time since last frame given as
-	 * the dt parameter. */
-	virtual void step(unsigned int dt, EntityManager* em) = 0;
+	/* Performs one frame worth of calculations. Time since last frame in seconds
+	 * given as the delta_time parameter. */
+	virtual void step(float delta_time, EntityManager* em) = 0;
 
 	/* Gets called when an entity is created which should be handled by the
 	 * system.

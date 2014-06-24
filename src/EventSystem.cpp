@@ -16,7 +16,7 @@ EventSystem::~EventSystem ()
 }
 
 
-void EventSystem::step(unsigned int dt, EntityManager* em)
+void EventSystem::step(float delta_time, EntityManager* em)
 {
 	SDL_Event e;
 

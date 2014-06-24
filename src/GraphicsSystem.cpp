@@ -68,7 +68,7 @@ SDL_Texture* GraphicsSystem::loadTexture(string path)
     return loadedTexture;
 }
 
-void GraphicsSystem::step(unsigned int dt, EntityManager* em)
+void GraphicsSystem::step(float delta_time, EntityManager* em)
 {
     SDL_RenderClear(_renderer);
 

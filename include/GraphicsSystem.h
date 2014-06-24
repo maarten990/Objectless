@@ -12,7 +12,7 @@ public:
 	GraphicsSystem();
 	~GraphicsSystem();
 	SDL_Texture* loadTexture(std::string path);
-	void step(unsigned int dt, EntityManager* em);
+	void step(float delta_time, EntityManager* em);
 
 private:
 	SDL_Window *_window;
