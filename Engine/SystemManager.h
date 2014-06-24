@@ -6,7 +6,7 @@
 
 class SystemManager {
 public:
-	SystemManager(int fps, bool *running, EntityManager *entity_manager);
+	SystemManager(int max_fps, bool *running, EntityManager *entity_manager);
 	~SystemManager();
 
 	/* Add a system.
@@ -27,8 +27,8 @@ private:
 	std::vector<System *> _systems;
 	bool *_running;
 
-	/* the frame duration in milliseconds */
-	float _frametime;
+	// The minimum frame duration needed to not exceed max fps.
+	float _max_fps_frame_duration;
 
     EntityManager *_entity_manager;
 

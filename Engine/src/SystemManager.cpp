@@ -1,12 +1,16 @@
 #include <SDL.h>
 #include "SystemManager.h"
 #include "EntityManager.h"
+#include "Timer.h"
 
-SystemManager::SystemManager(int fps, bool *running, EntityManager *em)
+
+
+SystemManager::SystemManager(int max_fps, bool *running, EntityManager *em)
     :_entity_manager(em)
 {
 	_running = running;
-	_frametime = (1.0f / fps) * 1000;
+	_max_fps_frame_duration = (1.0f / max_fps);
+	avg_fps = 60.0f;
 }
 
 SystemManager::~SystemManager()
@@ -29,31 +33,33 @@ void SystemManager::add(System *system)
  */
 void SystemManager::loop()
 {
-	int frames = 0;
-	const Uint32 initial_ticks = SDL_GetTicks();
-	Uint32 ticks = 0;
-	Uint32 prev_ticks = SDL_GetTicks();
-	Uint32 duration;
-	float diff;
+	uint32_t current_frame_count = 0;
+
+	Timer timer;
+	double previous_frame_duration = 0.0166667;
 
 	while (*_running) {
-		ticks = SDL_GetTicks();
-		frames += 1;
-
-		// calculate average fps
-		diff = (float)(ticks - initial_ticks);
-		avg_fps = (frames * 1000) / diff;
+		++current_frame_count;
+		const uint64_t frame_start_timestamp = timer.current_timestamp();
 
 		// call systems
 		for (System *system : _systems) {
-			system->step(ticks - prev_ticks, _entity_manager);
-			prev_ticks = ticks;
+			system->step((float)previous_frame_duration, _entity_manager);
 		}
 
+		previous_frame_duration = timer.seconds_since(frame_start_timestamp);
+		//Note: This fps does not include the delay used to stay below max fps.
+		double fps = 1.0f / previous_frame_duration;
+
+		// calculate moving average fps
+		const float alpha = 0.01f;
+		avg_fps = (float)((alpha * fps) + (1.0 - alpha) * avg_fps);
+
 		// limit framerate
-		duration = SDL_GetTicks() - ticks;
-		if (duration < _frametime) {
-			SDL_Delay((Uint32)(_frametime - duration));
+		if (previous_frame_duration < _max_fps_frame_duration) {
+			//Remaining time this frame must take to process in order to not exceed target frame rate.
+			double remaining_frame_duration_milliseconds = (_max_fps_frame_duration - previous_frame_duration) * 1000.0;
+			SDL_Delay((uint32_t)remaining_frame_duration_milliseconds);
 		}
 	}
 }
