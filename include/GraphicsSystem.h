@@ -20,6 +20,8 @@ public:
 	SDL_Texture* loadTexture(const std::string& path);
 	void step(float delta_time, EntityManager* em);
 
+	SDL_Renderer* getRenderer() const { return _renderer; }
+
 	/* Register a listener for post-render events.
 	 * This is called after normal rendering has finished, but before the results
 	 * have been presented.
