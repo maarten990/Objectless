@@ -45,7 +45,7 @@ SDL_Texture* GraphicsSystem::loadTexture(const std::string& path)
 
 	SDL_FreeSurface(loadedSurface);
 
-	printf("Texture '%s' loaded successfully.", path.c_str());
+	printf("Texture '%s' loaded successfully.\n", path.c_str());
 	return loadedTexture;
 }
 
