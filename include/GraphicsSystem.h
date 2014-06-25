@@ -11,7 +11,7 @@ class GraphicsSystem : public System
 public:
 	GraphicsSystem();
 	~GraphicsSystem();
-	SDL_Texture* loadTexture(std::string path);
+	SDL_Texture* loadTexture(const std::string& path);
 	void step(float delta_time, EntityManager* em);
 
 private:

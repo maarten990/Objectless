@@ -34,7 +34,7 @@ GraphicsSystem::~GraphicsSystem()
 
 
 // Load a texture from file
-SDL_Texture* GraphicsSystem::loadTexture(string path)
+SDL_Texture* GraphicsSystem::loadTexture(const std::string& path)
 {
     SDL_Texture* loadedTexture = NULL;
     SDL_Surface* loadedSurface = IMG_Load(path.c_str());
