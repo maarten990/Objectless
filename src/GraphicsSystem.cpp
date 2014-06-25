@@ -49,7 +49,7 @@ SDL_Texture* GraphicsSystem::loadTexture(const std::string& path)
 	return loadedTexture;
 }
 
-void GraphicsSystem::step(float delta_time, EntityManager* em)
+void GraphicsSystem::step(float /*delta_time*/, EntityManager* em)
 {
     SDL_RenderClear(_renderer);
 
