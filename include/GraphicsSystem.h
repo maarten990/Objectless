@@ -2,7 +2,6 @@
 #define GRAPHICSSYSTEM_H
 
 #include <SDL.h>
-#include <iostream>
 
 #include "Engine/System.h"
 
