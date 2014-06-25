@@ -11,6 +11,7 @@
 #include "Engine/EntityManager.h"
 #include "Engine/SystemManager.h"
 #include "Engine/ComponentManager.h"
+#include "GeometryDrawer.h"
 
 #include "Components.h"
 #include "GraphicsSystem.h"
@@ -62,10 +63,12 @@ int main()
 
     GraphicsSystem *graphics = new GraphicsSystem();
     EventSystem *events = new EventSystem(&running);
+		GeometryDrawer* geometryDrawer = new GeometryDrawer(graphics->getRenderer(), graphics);
 
     /* register systems */
     e.register_system(graphics, {Graphics::id(), Position::id()});
     e.register_system(events, {KeyboardInput::id()});
+		e.register_system(geometryDrawer, set<type_index>());
 
     std::set<type_index> player_components = {KeyboardInput::id(), Graphics::id(), Position::id()};
     unsigned int player = e.add(player_components);
@@ -104,6 +107,7 @@ int main()
 
     manager.add(graphics);
     manager.add(events);
+		manager.add(geometryDrawer);
 
 #ifdef WITH_LUA
     /* add a REPL if the input is redirected */
