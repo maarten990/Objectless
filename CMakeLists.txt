@@ -26,8 +26,6 @@ elseif(MSVC)
     endif()
 endif()
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/Engine)
-
 # find Lua
 find_package(Lua51)
 if (LUA51_FOUND)
@@ -50,14 +48,14 @@ if (NOT WIN32)
 endif()
 
 # compiling
-file(GLOB SRC "src/*.cpp")
-file(GLOB HEADERS "include/*.h")
+file(GLOB SRC "src/*.cpp" "Engine/src/*.cpp")
+file(GLOB HEADERS "include/*.h" "Engine/*.h")
 if (ENABLE_LUA)
     list(APPEND SRC "src/lua/REPLSystem.cpp")
 endif()
 
 add_executable(objectless ${SRC} ${HEADERS})
-target_link_libraries(objectless engine ${SDL2_LIBRARIES} ${SDLIMG_LIBRARIES})
+target_link_libraries(objectless ${SDL2_LIBRARIES} ${SDLIMG_LIBRARIES})
 
 if (ENABLE_LUA)
     target_link_libraries(objectless ${LUA_LIBRARIES})
