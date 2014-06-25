@@ -20,9 +20,6 @@ GraphicsSystem::GraphicsSystem()
 			assert2(false, "IMG_Init failed!! %s", SDL_GetError());
 			exit(0);
     }
-
-	SDL_SetRenderDrawColor(_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-	SDL_RenderClear(_renderer);
 }
 
 
@@ -52,6 +49,7 @@ SDL_Texture* GraphicsSystem::loadTexture(const std::string& path)
 
 void GraphicsSystem::step(float /*delta_time*/, EntityManager* em)
 {
+	SDL_SetRenderDrawColor(_renderer, 0x00, 0x00, 0x5B, 0xFF);
     SDL_RenderClear(_renderer);
 
     for (unsigned int id: _entities) {
@@ -67,7 +65,6 @@ void GraphicsSystem::step(float /*delta_time*/, EntityManager* em)
         dest.h = g->height;
 
         SDL_RenderCopy(_renderer, g->texture, nullptr, &dest);
-        SDL_GetError();
     }
 
 		for (auto post_render_callback : _post_render_callbacks)
