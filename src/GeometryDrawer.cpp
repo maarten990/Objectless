@@ -33,8 +33,12 @@ void GeometryDrawer::step(float delta_time, EntityManager*)
 	}
 
 	//Remove line segments whose lifetime has expired.
-	_lines.erase(std::remove_if(std::begin(_lines), std::end(_lines),
-		[](const LineSegment& line) {return line.remaining_lifetime <= 0.0f; }));
+	auto erase_itr = std::remove_if(std::begin(_lines), std::end(_lines),
+		[](const LineSegment& line) {return line.remaining_lifetime <= 0.0f; });
+	if (erase_itr != std::end(_lines))
+	{
+		_lines.erase(erase_itr);
+	}
 }
 
 void GeometryDrawer::draw_line(float start_x, float start_y, float end_x, float end_y,
