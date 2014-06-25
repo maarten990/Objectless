@@ -49,8 +49,20 @@ endif()
 
 # compiling
 file(GLOB SRC "src/*.cpp" "Engine/src/*.cpp")
-file(GLOB HEADERS "include/*.h" "Engine/*.h")
+file(GLOB_RECURSE ENGINE_SRC "Engine/src/*.cpp")
+file(GLOB_RECURSE EXTERNAL_SRC "External/*.c" "External/*.cpp")
+set(SRC ${SRC} ${ENGINE_SRC})
+set(SRC ${SRC} ${EXTERNAL_SRC})
+
+file(GLOB HEADERS "include/*.h")
+file(GLOB_RECURSE ENGINE_HEADERS "Engine/*.h")
+file(GLOB_RECURSE EXTERNAL_HEADERS "External/*.h")
+set(HEADERS ${HEADERS} ${ENGINE_HEADERS})
+set(HEADERS ${HEADERS} ${EXTERNAL_HEADERS})
+
 if (ENABLE_LUA)
+    file(GLOB LUA_HEADERS "include/lua/*.h")
+    set(HEADERS ${HEADERS} ${LUA_HEADERS})
     list(APPEND SRC "src/lua/REPLSystem.cpp")
 endif()
 
