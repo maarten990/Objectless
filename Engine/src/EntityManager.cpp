@@ -6,8 +6,8 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include "Component.h"
-#include "EntityManager.h"
+#include "Engine/Component.h"
+#include "Engine/EntityManager.h"
 
 using namespace std;
 

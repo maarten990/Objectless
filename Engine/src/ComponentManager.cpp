@@ -1,7 +1,7 @@
 #include <string>
-#include "ComponentManager.h"
-#include "Component.h"
-#include "System.h"
+#include "Engine/ComponentManager.h"
+#include "Engine/Component.h"
+#include "Engine/System.h"
 
 using namespace std;
 

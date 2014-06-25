@@ -1,6 +1,6 @@
 #include <SDL.h>
-#include "SystemManager.h"
-#include "EntityManager.h"
+#include "Engine/SystemManager.h"
+#include "Engine/EntityManager.h"
 #include "Timer.h"
 
 
