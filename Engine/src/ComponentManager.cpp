@@ -27,5 +27,5 @@ type_index *ComponentManager::index_from_name(string name)
 	if (it != _type_indices.end())
 		return &it->second;
 	else
-		return NULL;
+		return nullptr;
 }

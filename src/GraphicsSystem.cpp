@@ -84,7 +84,7 @@ void GraphicsSystem::step(float delta_time, EntityManager* em)
         dest.w = g->width;
         dest.h = g->height;
 
-        SDL_RenderCopy(_renderer, g->texture, NULL, &dest);
+        SDL_RenderCopy(_renderer, g->texture, nullptr, &dest);
         SDL_GetError();
     }
 
