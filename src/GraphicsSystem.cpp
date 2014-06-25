@@ -7,13 +7,6 @@
 #include "Assert.h"
 
 
-Uint32 graphics_callback(Uint32 interval, void *graphics)
-{
-	GraphicsSystem *system = static_cast<GraphicsSystem*>(graphics);
-
-	return interval;
-}
-
 GraphicsSystem::GraphicsSystem()
 {
 	_window = SDL_CreateWindow("Objectless", SDL_WINDOWPOS_UNDEFINED,
@@ -29,7 +22,6 @@ GraphicsSystem::GraphicsSystem()
 
 	SDL_SetRenderDrawColor(_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(_renderer);
-	SDL_AddTimer(100, graphics_callback, this);
 }
 
 
