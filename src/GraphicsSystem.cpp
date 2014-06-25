@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <SDL_image.h>
+#include <inttypes.h>
 
 #include "GraphicsSystem.h"
 #include "Components.h"
@@ -69,5 +70,28 @@ void GraphicsSystem::step(float /*delta_time*/, EntityManager* em)
         SDL_GetError();
     }
 
+		for (auto post_render_callback : _post_render_callbacks)
+		{
+			post_render_callback.function();
+		}
+
     SDL_RenderPresent(_renderer);
+}
+
+uint64_t GraphicsSystem::registerPostRenderCallback(const std::function<void()> callback)
+{
+	const uint64_t callback_id = _num_post_render_callbacks_added++;
+	_post_render_callbacks.push_back(Callback{ callback_id, callback });
+	return callback_id;
+}
+
+void GraphicsSystem::unregisterPostRenderCallback(uint64_t callback_id)
+{
+	const auto itr = std::find_if(std::begin(_post_render_callbacks), std::end(_post_render_callbacks),
+		[callback_id](const Callback& callback) {return callback.id == callback_id; });
+
+	assert2(itr != std::end(_post_render_callbacks),
+		"No post render callback with ID %" PRIu64 " exists.", callback_id);
+
+	_post_render_callbacks.erase(itr);
 }
