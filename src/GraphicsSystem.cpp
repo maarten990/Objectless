@@ -36,28 +36,17 @@ GraphicsSystem::~GraphicsSystem()
 // Load a texture from file
 SDL_Texture* GraphicsSystem::loadTexture(const std::string& path)
 {
-    SDL_Texture* loadedTexture = NULL;
-    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-    if(loadedSurface) {
-        loadedTexture = SDL_CreateTextureFromSurface(_renderer, loadedSurface);
-        if(!loadedTexture) {
-            cout<<"Error: SDL_Texture* could not be created from image at " << path <<". Exiting..."<<endl;
-            SDL_GetError();
-            exit(0);
-        }
-        else
-        {
-        
-            cout<<"Texture loaded succesfully"<<endl;
-        }
-        SDL_FreeSurface( loadedSurface );
-    }
-    else {
-        cout<<"Error: Image at " <<path<< " could not be loaded as SDL_Surface*. Exiting..."<<endl;
-          SDL_GetError();
-        exit(0);
-    }
-    return loadedTexture;
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	const char* errorMessage = "Failed to load image at path '%s'. SDL Error: %s";
+	assert2(loadedSurface != nullptr, errorMessage, path.c_str(), SDL_GetError());
+
+	SDL_Texture* loadedTexture = SDL_CreateTextureFromSurface(_renderer, loadedSurface);
+	assert2(loadedTexture != nullptr, errorMessage, path.c_str(), SDL_GetError());
+
+	SDL_FreeSurface(loadedSurface);
+
+	printf("Texture '%s' loaded successfully.", path.c_str());
+	return loadedTexture;
 }
 
 void GraphicsSystem::step(float delta_time, EntityManager* em)
