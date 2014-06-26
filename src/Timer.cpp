@@ -1,25 +1,24 @@
 ﻿#include "Timer.h"
-#include <SDL_timer.h>
 
 
 Timer::Timer()
-	: performance_frequency(SDL_GetPerformanceFrequency())
-	, start_timestamp(SDL_GetPerformanceCounter())
+	: start_point(clock.now())
 {
 }
 
 double Timer::seconds_since_start() const
 {
-	return seconds_since(start_timestamp);
+	return seconds_since(0);
 }
 
 double Timer::seconds_since(uint64_t timestamp) const
 {
-	uint64_t elapsed = current_timestamp() - timestamp;
-	return (double) elapsed / (double) performance_frequency;
+	const long long nano_secs = current_timestamp() - timestamp;
+	const double seconds = (double)nano_secs / std::chrono::nanoseconds::period::den;
+	return seconds;
 }
 
 uint64_t Timer::current_timestamp() const
 {
-	return SDL_GetPerformanceCounter();
+	return std::chrono::nanoseconds(clock.now() - start_point).count();
 }

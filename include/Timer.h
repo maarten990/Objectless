@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <chrono>
 
 class Timer
 {
@@ -17,6 +18,6 @@ public:
 	uint64_t current_timestamp() const;
 
 private:
-	uint64_t performance_frequency;
-	uint64_t start_timestamp;
+	std::chrono::high_resolution_clock clock;
+	std::chrono::system_clock::time_point start_point;
 };
