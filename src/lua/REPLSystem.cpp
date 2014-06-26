@@ -37,7 +37,7 @@ REPLSystem::~REPLSystem()
 {
 }
 
-void REPLSystem::step(unsigned int dt, EntityManager *em)
+void REPLSystem::step(float dt, EntityManager *em)
 {
 	vector<string> lines = get_input();
 	int error;
