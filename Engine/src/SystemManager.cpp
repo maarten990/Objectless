@@ -14,8 +14,11 @@ SystemManager::SystemManager(int max_fps, bool *running)
 
 SystemManager::~SystemManager()
 {
-	for (System *system : _systems)
-		delete system;
+	//Deleting of systems happens in the reverse order of the order they were
+	//added, which makes destruction more sensible.
+	for (size_t i = _systems.size() - 1; i > 0; --i) {
+		delete _systems[i];
+	}
 }
 
 void SystemManager::add(System *system)
