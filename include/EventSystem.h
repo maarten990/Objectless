@@ -7,11 +7,14 @@
 class EventSystem : public System
 {
 public:
-	EventSystem(bool *running);
+	EventSystem(bool *running, EntityManager *em);
 	~EventSystem();
-	void step(float delta_time, EntityManager* em);
+	void step(float delta_time);
 	bool *running;
-	void handle_keyevent(SDL_Keycode k, EntityManager* em);
+	void handle_keyevent(SDL_Keycode k);
+
+private:
+	EntityManager *_entitymanager;
 };
 
 #endif

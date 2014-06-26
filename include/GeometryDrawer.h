@@ -24,7 +24,7 @@ public:
 	GeometryDrawer(SDL_Renderer* renderer, GraphicsSystem* graphics_system);
 	~GeometryDrawer();
 
-	virtual void step(float delta_time, EntityManager* em) override;
+	virtual void step(float delta_time) override;
 
 	void draw_line(float start_x, float start_y, float end_x, float end_y,
 		uint32_t color_rgba = 0xFFFFFFFF, float duration_seconds = 0.0f);

@@ -6,7 +6,7 @@
 
 class SystemManager {
 public:
-	SystemManager(int max_fps, bool *running, EntityManager *entity_manager);
+	SystemManager(int max_fps, bool *running);
 	~SystemManager();
 
 	/* Add a system.
@@ -29,8 +29,4 @@ private:
 
 	// The minimum frame duration needed to not exceed max fps.
 	float _max_fps_frame_duration;
-
-    EntityManager *_entity_manager;
-
-
 };

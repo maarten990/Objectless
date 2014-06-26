@@ -14,7 +14,7 @@ public:
 
 	/* Performs one frame worth of calculations. Time since last frame in seconds
 	 * given as the delta_time parameter. */
-	virtual void step(float delta_time, EntityManager* em) = 0;
+	virtual void step(float delta_time) = 0;
 
 	/* Gets called when an entity is created which should be handled by the
 	 * system.

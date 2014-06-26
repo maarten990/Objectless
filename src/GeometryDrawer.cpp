@@ -23,7 +23,7 @@ GeometryDrawer::~GeometryDrawer()
 	_graphics_system->unregisterPostRenderCallback(_graphics_callback_id);
 }
 
-void GeometryDrawer::step(float delta_time, EntityManager*)
+void GeometryDrawer::step(float delta_time)
 {
 	if (_lines.empty()) {
 		return;

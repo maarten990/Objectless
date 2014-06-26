@@ -15,10 +15,10 @@ class GraphicsSystem : public System
 		std::function<void()> function;
 	};
 public:
-	GraphicsSystem();
+	GraphicsSystem(EntityManager *em);
 	~GraphicsSystem();
 	SDL_Texture* loadTexture(const std::string& path);
-	void step(float delta_time, EntityManager* em);
+	void step(float delta_time);
 
 	SDL_Renderer* getRenderer() const { return _renderer; }
 
@@ -35,6 +35,7 @@ public:
 private:
 	SDL_Window *_window;
 	SDL_Renderer *_renderer;
+	EntityManager *_entitymanager;
 
 	uint64_t _num_post_render_callbacks_added = 0;
 	std::vector<Callback> _post_render_callbacks;

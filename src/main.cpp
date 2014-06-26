@@ -61,8 +61,8 @@ int main()
     // TODO: this bool pointer that gets passed around to two classes sucks
     bool running = true;
 
-    GraphicsSystem *graphics = new GraphicsSystem();
-    EventSystem *events = new EventSystem(&running);
+    GraphicsSystem *graphics = new GraphicsSystem(&e);
+    EventSystem *events = new EventSystem(&running, &e);
 		GeometryDrawer* geometryDrawer = new GeometryDrawer(graphics->getRenderer(), graphics);
 
     /* register systems */
@@ -103,7 +103,7 @@ int main()
 
     e.get<KeyboardInput>(player)->keybinds = keys;
 
-    SystemManager manager(60, &running, &e);
+    SystemManager manager(60, &running);
 
     manager.add(graphics);
     manager.add(events);

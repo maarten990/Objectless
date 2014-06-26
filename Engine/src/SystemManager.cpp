@@ -5,8 +5,7 @@
 
 
 
-SystemManager::SystemManager(int max_fps, bool *running, EntityManager *em)
-    :_entity_manager(em)
+SystemManager::SystemManager(int max_fps, bool *running)
 {
 	_running = running;
 	_max_fps_frame_duration = (1.0f / max_fps);
@@ -44,7 +43,7 @@ void SystemManager::loop()
 
 		// call systems
 		for (System *system : _systems) {
-			system->step((float)previous_frame_duration, _entity_manager);
+			system->step((float)previous_frame_duration);
 		}
 
 		previous_frame_duration = timer.seconds_since(frame_start_timestamp);

@@ -21,7 +21,7 @@ class REPLSystem : public System
 public:
 	REPLSystem(EntityManager *em, ComponentManager *cm);
 	virtual ~REPLSystem();
-	void step(float dt, EntityManager* em);
+	void step(float dt);
 
 private:
 	/* Check if stdin is readable, and if so, read it and return the input */

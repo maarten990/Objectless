@@ -8,12 +8,14 @@
 #include "Assert.h"
 
 
-GraphicsSystem::GraphicsSystem()
+GraphicsSystem::GraphicsSystem(EntityManager *em)
 {
 	_window = SDL_CreateWindow("Objectless", SDL_WINDOWPOS_UNDEFINED,
 			SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
 	_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED |
 		   	SDL_RENDERER_PRESENTVSYNC);
+
+	_entitymanager = em;
 
     // Initialize the flags for image lib
     if(!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
@@ -47,14 +49,14 @@ SDL_Texture* GraphicsSystem::loadTexture(const std::string& path)
 	return loadedTexture;
 }
 
-void GraphicsSystem::step(float /*delta_time*/, EntityManager* em)
+void GraphicsSystem::step(float /*delta_time*/)
 {
 	SDL_SetRenderDrawColor(_renderer, 0x00, 0x00, 0x5B, 0xFF);
     SDL_RenderClear(_renderer);
 
     for (unsigned int id: _entities) {
-        Graphics *g = em->get<Graphics>(id);
-        Position *p = em->get<Position>(id);
+        Graphics *g = _entitymanager->get<Graphics>(id);
+        Position *p = _entitymanager->get<Position>(id);
 
         /* create destination rect using the desired position 
          * and the texture's dimensions */
