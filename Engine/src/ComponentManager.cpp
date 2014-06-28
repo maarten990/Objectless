@@ -1,4 +1,5 @@
 #include <string>
+#include <memory>
 #include "Engine/ComponentManager.h"
 #include "Engine/Component.h"
 #include "Engine/System.h"
@@ -13,11 +14,11 @@ ComponentManager::~ComponentManager()
 {
 }
 
-Component *ComponentManager::construct(type_index type)
+shared_ptr<Component> ComponentManager::construct(type_index type)
 {
 	Component *component = _constructors[type]();
 
-	return component;
+	return shared_ptr<Component>(component);
 }
 
 type_index *ComponentManager::index_from_name(string name)

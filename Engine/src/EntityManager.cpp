@@ -6,12 +6,13 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <memory>
 #include "Engine/Component.h"
 #include "Engine/EntityManager.h"
 
 using namespace std;
 
-EntityManager::EntityManager(ComponentManager *mgr)
+EntityManager::EntityManager(shared_ptr<ComponentManager> mgr)
 {
     _next_id = 0;
     _component_mgr = mgr;
@@ -47,7 +48,7 @@ unsigned int EntityManager::add(set<type_index> types)
     for (auto &system_pair : _systems) {
         /* each component requested by the system should be present in types */
         if (compare(system_pair.first, types)) {
-            for (System *system : system_pair.second) {
+            for (auto &system : system_pair.second) {
                 system->notify_created(_next_id);
             }
         }
@@ -64,11 +65,6 @@ void EntityManager::remove(unsigned int id)
      * efficiently */
     for (auto &type_ptr_pair : _entities[id]) {
         remove_component(id, type_ptr_pair.first);
-    }
-
-    map<type_index, Component*> entity = _entities[id];
-    for (auto &component_pair : entity) {
-        delete component_pair.second;
     }
 
     _entities.erase(id);
@@ -91,7 +87,7 @@ void EntityManager::add_component(unsigned int id, type_index type)
          * entry, make sure that this is a new notification by checking that the
          * newly added component is one of the required types */
         if (compare(required, types) && required.find(type) != required.end()) {
-            for (System *system : system_pair.second) {
+            for (auto &system : system_pair.second) {
                 system->notify_created(id);
             }
         }
@@ -103,7 +99,7 @@ void EntityManager::remove_component(unsigned int id, type_index type)
     /* notify each system that requests this type about this entity losing it */
     for (auto &system_pair : _systems) {
         if (system_pair.first.find(type) != system_pair.first.end()) {
-            for (System *system : system_pair.second) {
+            for (auto &system : system_pair.second) {
                 system->notify_destroyed(id);
             }
         }
@@ -112,7 +108,8 @@ void EntityManager::remove_component(unsigned int id, type_index type)
     _entities[id].erase(type);
 }
 
-void EntityManager::register_system(System* system, set<type_index> components)
+void EntityManager::register_system(shared_ptr<System> system,
+        set<type_index> components)
 {
 	_systems[components].insert(system);
 }
@@ -131,7 +128,8 @@ string EntityManager::pretty(unsigned int id)
     return str.str();
 }
 
-Component* EntityManager::find_component(unsigned int entity_id, type_index component_type)
+shared_ptr<Component> EntityManager::find_component(unsigned int entity_id,
+	type_index component_type)
 {
 	auto entity = _entities.find(entity_id);
 	if (entity == std::end(_entities)) {

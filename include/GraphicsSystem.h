@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <unordered_map>
 #include <functional>
+#include <memory>
 
 #include "Engine/System.h"
 
@@ -15,7 +16,7 @@ class GraphicsSystem : public System
 		std::function<void()> function;
 	};
 public:
-	GraphicsSystem(EntityManager *em);
+	GraphicsSystem(shared_ptr<EntityManager> em);
 	~GraphicsSystem();
 	SDL_Texture* loadTexture(const std::string& path);
 	void step(float delta_time);
@@ -35,7 +36,7 @@ public:
 private:
 	SDL_Window *_window;
 	SDL_Renderer *_renderer;
-	EntityManager *_entitymanager;
+	shared_ptr<EntityManager> _entitymanager;
 
 	uint64_t _num_post_render_callbacks_added = 0;
 	std::vector<Callback> _post_render_callbacks;

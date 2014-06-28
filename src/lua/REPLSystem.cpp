@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <lua.hpp>
+#include <memory>
 #include "lua/REPLSystem.h"
 #include "lua/lua_interface.h"
 
@@ -14,17 +15,18 @@ using namespace std;
 	lua_pushcfunction(state, func); \
 	lua_setglobal(state, #func);
 
-REPLSystem::REPLSystem(EntityManager *em, ComponentManager *cm)
+REPLSystem::REPLSystem(shared_ptr<EntityManager> em,
+		shared_ptr<ComponentManager> cm)
 	: poll_fds { {.fd = STDIN_FILENO, .events = POLLIN} }
 {
 	_L = luaL_newstate();
 	luaL_openlibs(_L);
 
 	/* add global entitymanager and componentmanager */
-	lua_pushlightuserdata(_L, em);
+	lua_pushlightuserdata(_L, em.get());
 	lua_setglobal(_L, "entity_manager");
 
-	lua_pushlightuserdata(_L, cm);
+	lua_pushlightuserdata(_L, cm.get());
 	lua_setglobal(_L, "component_manager");
 
 	/* register functions */

@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <inttypes.h>
+#include <memory>
 
 #include "GraphicsSystem.h"
 #include "Components.h"
@@ -8,7 +9,7 @@
 #include "Assert.h"
 
 
-GraphicsSystem::GraphicsSystem(EntityManager *em)
+GraphicsSystem::GraphicsSystem(shared_ptr<EntityManager> em)
 {
 	_window = SDL_CreateWindow("Objectless", SDL_WINDOWPOS_UNDEFINED,
 			SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
@@ -55,8 +56,8 @@ void GraphicsSystem::step(float /*delta_time*/)
     SDL_RenderClear(_renderer);
 
     for (unsigned int id: _entities) {
-        Graphics *g = _entitymanager->get<Graphics>(id);
-        Position *p = _entitymanager->get<Position>(id);
+        shared_ptr<Graphics> g = _entitymanager->get<Graphics>(id);
+        shared_ptr<Position> p = _entitymanager->get<Position>(id);
 
         /* create destination rect using the desired position 
          * and the texture's dimensions */

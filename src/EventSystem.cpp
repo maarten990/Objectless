@@ -6,7 +6,7 @@
 #include "EventSystem.h"
 #include "KeyBoardInputComponent.h"
 
-EventSystem::EventSystem(bool *running, EntityManager *em)
+EventSystem::EventSystem(shared_ptr<bool> running, shared_ptr<EntityManager> em)
 {
 	this->running = running;
 	_entitymanager = em;
@@ -36,8 +36,7 @@ void EventSystem::handle_keyevent(SDL_Keycode k)
 	// KeyBoardInputComponent. If so, try apply current keyboard event
 	for (unsigned int entity : _entities) {
 
-        Component* component = _entitymanager->get<KeyboardInput>(entity);
-		KeyboardInput* kb = static_cast<KeyboardInput*>(component);
+        auto kb = _entitymanager->get<KeyboardInput>(entity);
 
         // Check if key is in the dict. If so, apply function
         if(kb->keybinds.find(k) != kb->keybinds.end()) {

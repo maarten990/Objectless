@@ -1,11 +1,12 @@
 #include <SDL.h>
+#include <memory>
 #include "Engine/SystemManager.h"
 #include "Engine/EntityManager.h"
 #include "Timer.h"
 
+using namespace std;
 
-
-SystemManager::SystemManager(int max_fps, bool *running)
+SystemManager::SystemManager(int max_fps, shared_ptr<bool> running)
 {
 	_running = running;
 	_max_fps_frame_duration = (1.0f / max_fps);
@@ -14,14 +15,9 @@ SystemManager::SystemManager(int max_fps, bool *running)
 
 SystemManager::~SystemManager()
 {
-	//Deleting of systems happens in the reverse order of the order they were
-	//added, which makes destruction more sensible.
-	for (size_t i = _systems.size() - 1; i > 0; --i) {
-		delete _systems[i];
-	}
 }
 
-void SystemManager::add(System *system)
+void SystemManager::add(shared_ptr<System> system)
 {
 	_systems.push_back(system);
 }
@@ -45,7 +41,7 @@ void SystemManager::loop()
 		const uint64_t frame_start_timestamp = timer.current_timestamp();
 
 		// call systems
-		for (System *system : _systems) {
+		for (auto &system : _systems) {
 			system->step((float)previous_frame_duration);
 		}
 

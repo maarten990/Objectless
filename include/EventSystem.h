@@ -2,19 +2,20 @@
 #define EVENTSYSTEM_H value
 
 #include <SDL.h>
+#include <memory>
 #include "Engine/System.h"
 
 class EventSystem : public System
 {
 public:
-	EventSystem(bool *running, EntityManager *em);
+	EventSystem(shared_ptr<bool> running, shared_ptr<EntityManager> em);
 	~EventSystem();
 	void step(float delta_time);
-	bool *running;
+	shared_ptr<bool> running;
 	void handle_keyevent(SDL_Keycode k);
 
 private:
-	EntityManager *_entitymanager;
+	shared_ptr<EntityManager> _entitymanager;
 };
 
 #endif

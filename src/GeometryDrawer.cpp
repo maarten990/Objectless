@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <SDL_render.h>
+#include <memory>
 
 #include "External/SDL2_gfx/SDL2_gfxPrimitives.h"
 #include "Engine/EntityManager.h"
@@ -10,8 +11,8 @@
 #include "GraphicsSystem.h"
 
 
-GeometryDrawer::GeometryDrawer(SDL_Renderer* renderer, GraphicsSystem* graphics_system)
-	: _renderer(renderer)
+GeometryDrawer::GeometryDrawer(shared_ptr<GraphicsSystem> graphics_system)
+	: _renderer(graphics_system->getRenderer())
 	, _graphics_system(graphics_system)
 {
 	_graphics_callback_id = _graphics_system->registerPostRenderCallback(

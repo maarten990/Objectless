@@ -16,7 +16,6 @@ struct Graphics : Component {
 
 	~Graphics() 
 	{
-	    SDL_DestroyTexture(texture);
 	}
 
 	static type_index id() {

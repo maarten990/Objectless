@@ -3,6 +3,7 @@
 #include "Engine/System.h"
 #include <vector>
 #include <stdint.h>
+#include <memory>
 
 struct SDL_Renderer;
 class GraphicsSystem;
@@ -21,7 +22,7 @@ class GeometryDrawer : public System
 
 
 public:
-	GeometryDrawer(SDL_Renderer* renderer, GraphicsSystem* graphics_system);
+	GeometryDrawer(shared_ptr<GraphicsSystem> graphics_system);
 	~GeometryDrawer();
 
 	virtual void step(float delta_time) override;
@@ -33,7 +34,7 @@ private:
 	void drawGeometry();
 
 	uint64_t _graphics_callback_id;
-	GraphicsSystem* _graphics_system;
+	shared_ptr<GraphicsSystem> _graphics_system;
 	SDL_Renderer* _renderer;
 	std::vector<LineSegment> _lines;
 };

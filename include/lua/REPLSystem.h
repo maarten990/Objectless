@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 #include <functional>
+#include <memory>
 #include <poll.h>
 #include <lua.hpp>
 #include "Engine/System.h"
@@ -19,7 +20,7 @@ using namespace std;
 class REPLSystem : public System
 {
 public:
-	REPLSystem(EntityManager *em, ComponentManager *cm);
+	REPLSystem(shared_ptr<EntityManager> em, shared_ptr<ComponentManager> cm);
 	virtual ~REPLSystem();
 	void step(float dt);
 

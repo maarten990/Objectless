@@ -7,6 +7,7 @@
 #include <typeinfo>
 #include <typeindex>
 #include <string>
+#include <memory>
 #include "Component.h"
 #include "System.h"
 
@@ -28,7 +29,7 @@ public:
 	}
 
 	/* Create a component of the given type, belonging to a given entity. */
-	Component *construct(type_index type);
+	shared_ptr<Component> construct(type_index type);
 
 	/* Return a pointer to the type_index corresponding to its string
 	 * representation. Returns NULL for an unknown/invalid name. */
