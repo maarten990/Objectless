@@ -16,14 +16,17 @@
 #define assert2(condition, ...) \
 do \
 { \
-	if (!(condition)) \
+__pragma(warning(push)) \
+__pragma(warning(disable:4127)) \
+if (!(condition)) \
 	{ \
 		printf("Assertion failed: %s\n", #condition); \
 		printf(__VA_ARGS__); \
 		printf("\nFile: %s:%i\nFunction: %s\n", __FILE__, __LINE__, FUNCTION_SIGNATURE); \
 		DEBUG_BREAK; \
 	} \
-} while (false)
+} while (false) \
+__pragma(warning(pop))
 
 #else
 //The void casting prevents warnings about unused variables.

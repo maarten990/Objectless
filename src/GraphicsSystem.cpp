@@ -5,7 +5,7 @@
 #include "GraphicsSystem.h"
 #include "Components.h"
 #include "Engine/EntityManager.h"
-#include "Assert.h"
+#include "Assert2.h"
 
 
 GraphicsSystem::GraphicsSystem(EntityManager *em)
