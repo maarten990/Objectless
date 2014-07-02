@@ -11,11 +11,11 @@ elseif(MSVC)
     set(SDL2_IMAGE_LOCATION "${CMAKE_SOURCE_DIR}" CACHE FILEPATH
         "The root folder of SDL2_image")
 
-    set(SDL2_LIBRARIES ${SDL2_LOCATION}/lib/x86/SDL2.lib
-                       ${SDL2_LOCATION}/lib/x86/SDL2main.lib)
+    set(SDL2_LIBRARIES ${SDL2_LOCATION}/lib/x64/SDL2.lib
+                       ${SDL2_LOCATION}/lib/x64/SDL2main.lib)
     set(SDL2_INCLUDE_DIRS ${SDL2_LOCATION}/include)
 
-    set(SDLIMG_LIBRARIES ${SDL2_IMAGE_LOCATION}/lib/x86/SDL2_image.lib)
+    set(SDLIMG_LIBRARIES ${SDL2_IMAGE_LOCATION}/lib/x64/SDL2_image.lib)
     set(SDLIMG_INCLUDE_DIRS ${SDL2_IMAGE_LOCATION}/include)
 
 # Force to always compile with W4
@@ -24,6 +24,11 @@ elseif(MSVC)
     else()
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
     endif()
+
+# Stupid cmake sets an x86 linker flag even if generator is VS x64.
+		if(CMAKE_EXE_LINKER_FLAGS MATCHES "machine:X86")
+			string(REGEX REPLACE "machine:X86" "machine:X64" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+		endif()
 endif()
 
 # find Lua
