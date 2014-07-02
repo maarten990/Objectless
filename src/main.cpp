@@ -22,20 +22,9 @@
 #include "lua/REPLSystem.h"
 #endif
 
-#define SCREEN_WIDTH 100
-#define SCREEN_HEIGHT 100
-
 /* required to compile on Windows */
 #undef main
 
-const int FPS = 60;
-const float FRAMEDURATION = (1.0 / 60) * 1000; // frame duration in ms
-
-
-void test_function()
-{
-    std::cout<<"The right button was pressed"<<std::endl;;
-}
 
 void initialize_components(ComponentManager *mgr)
 {
