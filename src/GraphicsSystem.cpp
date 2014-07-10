@@ -55,8 +55,8 @@ void GraphicsSystem::step(float /*delta_time*/)
     SDL_RenderClear(_renderer);
 
     for (unsigned int id: _entities) {
-        Graphics *g = _entitymanager->get<Graphics>(id);
-        Position *p = _entitymanager->get<Position>(id);
+        Graphics *g = _entitymanager->get_component<Graphics>(id);
+        Transform *p = _entitymanager->get_component<Transform>(id);
 
         /* create destination rect using the desired position 
          * and the texture's dimensions */

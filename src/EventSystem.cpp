@@ -36,7 +36,7 @@ void EventSystem::handle_keyevent(SDL_Keycode k)
 	// KeyBoardInputComponent. If so, try apply current keyboard event
 	for (unsigned int entity : _entities) {
 
-        Component* component = _entitymanager->get<KeyboardInput>(entity);
+        Component* component = _entitymanager->get_component<KeyboardInput>(entity);
 		KeyboardInput* kb = static_cast<KeyboardInput*>(component);
 
         // Check if key is in the dict. If so, apply function

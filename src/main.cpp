@@ -26,11 +26,11 @@
 #undef main
 
 
-void initialize_components(ComponentManager *mgr)
+void initialize_components(ComponentManager& mgr)
 {
-    mgr->register_component<KeyboardInput>();
-    mgr->register_component<Graphics>();
-    mgr->register_component<Position>();
+	mgr.register_component<KeyboardInput>();
+	mgr.register_component<Graphics>();
+	mgr.register_component<Transform>();
 }
 
 int main()
@@ -44,53 +44,51 @@ int main()
     }
 
     ComponentManager component_mgr;
-    initialize_components(&component_mgr);
-    EntityManager e(&component_mgr);
+    initialize_components(component_mgr);
+    EntityManager em;
 
     // TODO: this bool pointer that gets passed around to two classes sucks
     bool running = true;
 
-    GraphicsSystem *graphics = new GraphicsSystem(&e);
-    EventSystem *events = new EventSystem(&running, &e);
+    GraphicsSystem *graphics = new GraphicsSystem(&em);
+    EventSystem *events = new EventSystem(&running, &em);
 		GeometryDrawer* geometryDrawer = new GeometryDrawer(graphics->getRenderer(), graphics);
 
     /* register systems */
-    e.register_system(graphics, {Graphics::id(), Position::id()});
-    e.register_system(events, {KeyboardInput::id()});
-		e.register_system(geometryDrawer, set<type_index>());
+    em.register_system<Graphics, Transform>(graphics);
+    em.register_system<KeyboardInput>(events);
+		em.register_system<Transform>(geometryDrawer);
 
-    std::set<type_index> player_components = {KeyboardInput::id(), Graphics::id(), Position::id()};
-    unsigned int player = e.add(player_components);
+		unsigned int player = em.create_entity<KeyboardInput, Graphics, Transform>();
 
     /* graphics stuff */
     SDL_Texture* t = graphics->loadTexture("../images/ball.bmp");
-    e.get<Graphics>(player)->texture = t;
+    em.get_component<Graphics>(player)->texture = t;
     /* TODO: extract this info during texture creation */
-    e.get<Graphics>(player)->width = 20;
-    e.get<Graphics>(player)->height = 20;
+    em.get_component<Graphics>(player)->width = 20;
+    em.get_component<Graphics>(player)->height = 20;
 
-    e.get<Position>(player)->x = 50;
-    e.get<Position>(player)->y = 75;
-    e.get<Position>(player)->rotation = 0;
+    em.get_component<Transform>(player)->x = 50;
+    em.get_component<Transform>(player)->y = 75;
 
     /* keyboard stuff */
     std::map<SDL_Keycode, std::function<void()>> keys;
-    keys[SDLK_w] = [&e, &player]() {e.get<Position>(player)->y -= 5; }; 
-    keys[SDLK_a] = [&e, &player]() {e.get<Position>(player)->x -= 5; }; 
-    keys[SDLK_s] = [&e, &player]() {e.get<Position>(player)->y += 5; }; 
-    keys[SDLK_d] = [&e, &player]() {e.get<Position>(player)->x += 5; }; 
-    keys[SDLK_h] = [&t, &e, &player]() {
-        if (e.get<Graphics>(player))
-            e.remove_component(player, Graphics::id());
+    keys[SDLK_w] = [&em, &player]() {em.get_component<Transform>(player)->y -= 5; }; 
+    keys[SDLK_a] = [&em, &player]() {em.get_component<Transform>(player)->x -= 5; }; 
+    keys[SDLK_s] = [&em, &player]() {em.get_component<Transform>(player)->y += 5; }; 
+    keys[SDLK_d] = [&em, &player]() {em.get_component<Transform>(player)->x += 5; }; 
+    keys[SDLK_h] = [&t, &em, &player]() {
+        if (em.get_component<Graphics>(player))
+					em.remove_component<Graphics>(player);
         else {
-            e.add_component(player, Graphics::id());
-            e.get<Graphics>(player)->texture = t;
-            e.get<Graphics>(player)->width = 20;
-            e.get<Graphics>(player)->height = 20;
+            em.add_component<Graphics>(player);
+            em.get_component<Graphics>(player)->texture = t;
+            em.get_component<Graphics>(player)->width = 20;
+            em.get_component<Graphics>(player)->height = 20;
         }
     };
 
-    e.get<KeyboardInput>(player)->keybinds = keys;
+    em.get_component<KeyboardInput>(player)->keybinds = keys;
 
     SystemManager manager(60, &running);
 
@@ -100,7 +98,7 @@ int main()
 
 #ifdef WITH_LUA
     /* add a REPL if the input is redirected */
-    REPLSystem *repl = new REPLSystem(&e, &component_mgr);
+    REPLSystem *repl = new REPLSystem(&em, &component_mgr);
     if (!isatty(fileno(stdin))) {
         manager.add(repl);
     }
