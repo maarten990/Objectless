@@ -1,147 +1,98 @@
-#include <typeinfo>
 #include <typeindex>
-#include <set>
 #include <algorithm>
-#include <iterator>
 #include <string>
 #include <sstream>
-#include <iostream>
 #include "Engine/Component.h"
 #include "Engine/EntityManager.h"
 
-using namespace std;
 
-EntityManager::EntityManager(ComponentManager *mgr)
+EntityManager::EntityManager()
 {
-    _next_id = 0;
-    _component_mgr = mgr;
 }
 
 EntityManager::~EntityManager()
 {
 }
 
-/* TODO: this can probably be more efficient with a better datastructure */
-bool EntityManager::compare(set<type_index> required, set<type_index> available)
+void EntityManager::remove_entity(unsigned int entity_id)
 {
-    set<type_index> substracted;
+	verify_entity_exists(entity_id);
 
-    /* the required components are available when (required - available = empty
-     * set) */
-    set_difference(required.begin(), required.end(),
-            available.begin(), available.end(),
-            inserter(substracted, substracted.end()));
+	for (ComponentData& component_data : entities[entity_id].components) {
+		remove_component(entity_id, component_data.type);
+		delete component_data.component;
+	}
 
-    return substracted.size() == 0;
+	entities.erase(entity_id);
 }
 
-unsigned int EntityManager::add(set<type_index> types)
+void EntityManager::remove_component(unsigned int entity_id, const std::type_index& type)
 {
-    /* create the entity */
-    for (auto &type : types) {
-        // Possible: Could add second argument _next_id
-        _entities[_next_id][type] = _component_mgr->construct(type);
-    }
+	assert2(find_component(entity_id, type) != nullptr,
+		"Entity %u has no component of type '%s'.", entity_id, type.name());
 
-    /* Notify the interested systems if the correct components are present. */
-    for (auto &system_pair : _systems) {
-        /* each component requested by the system should be present in types */
-        if (compare(system_pair.first, types)) {
-            for (System *system : system_pair.second) {
-                system->notify_created(_next_id);
-            }
-        }
-    }
+	/* notify each system that requests this type about this entity losing it */
+	auto listener_itr = _component_type_listeners.find(type);
+	for (System* system : listener_itr->second) {
+		system->notify_destroyed(entity_id);
+	}
 
-    _next_id += 1;
-    return _next_id - 1;
+	Entity& entity = entities[entity_id];
+	auto itr = std::find_if(std::begin(entity.components), std::end(entity.components),
+		[&](const ComponentData& component) { return component.type == type; });
+
+	entity.components.erase(itr);
 }
 
-void EntityManager::remove(unsigned int id)
+std::string EntityManager::pretty(unsigned int entity_id) const
 {
-    /* notify each system that has a reference to this entity by
-     * TODO: maybe store some extra data so that this can be done more
-     * efficiently */
-    for (auto &type_ptr_pair : _entities[id]) {
-        remove_component(id, type_ptr_pair.first);
-    }
+	verify_entity_exists(entity_id);
 
-    map<type_index, Component*> entity = _entities[id];
-    for (auto &component_pair : entity) {
-        delete component_pair.second;
-    }
+	std::ostringstream str;
+	str << "Entity " << entity_id << ":\n";
 
-    _entities.erase(id);
+	const Entity& entity = entities.find(entity_id)->second;
+	for (const ComponentData& component_data : entity.components) {
+		str << "\t" << component_data.type.name() << "\t"
+			<< component_data.component << std::endl;
+	}
+
+	return str.str();
 }
 
-void EntityManager::add_component(unsigned int id, type_index type)
+Component* EntityManager::find_component(unsigned int entity_id, const std::type_index& component_type)
 {
-    _entities[id][type] = _component_mgr->construct(type);
-
-    /* collect the entity's types */
-    set<type_index> types;
-    for (auto &pair : _entities[id]) {
-        types.insert(pair.first);
-    }
-
-    /* check if this this entity should now be added to new systems */
-    for (auto &system_pair : _systems) {
-        set<type_index> required = system_pair.first;
-        /* to prevent systems getting notified multiple times about the same
-         * entry, make sure that this is a new notification by checking that the
-         * newly added component is one of the required types */
-        if (compare(required, types) && required.find(type) != required.end()) {
-            for (System *system : system_pair.second) {
-                system->notify_created(id);
-            }
-        }
-    }
-}
-
-void EntityManager::remove_component(unsigned int id, type_index type)
-{
-    /* notify each system that requests this type about this entity losing it */
-    for (auto &system_pair : _systems) {
-        if (system_pair.first.find(type) != system_pair.first.end()) {
-            for (System *system : system_pair.second) {
-                system->notify_destroyed(id);
-            }
-        }
-    }
-
-    _entities[id].erase(type);
-}
-
-void EntityManager::register_system(System* system, set<type_index> components)
-{
-	_systems[components].insert(system);
-}
-
-
-string EntityManager::pretty(unsigned int id)
-{
-    ostringstream str;
-    str << "Entity " << id << ":\n";
-
-    for (auto type_ptr_pair : _entities[id]) {
-        str << "\t" << type_ptr_pair.first.name() << "\t" <<
-            type_ptr_pair.second << endl;
-    }
-
-    return str.str();
-}
-
-Component* EntityManager::find_component(unsigned int entity_id, type_index component_type)
-{
-	auto entity = _entities.find(entity_id);
-	if (entity == std::end(_entities)) {
+	auto entity_itr = entities.find(entity_id);
+	if (entity_itr == std::end(entities)) {
 		return nullptr;
 	}
 
-	auto component = entity->second.find(component_type);
-	if (component == std::end(entity->second)) {
+	Entity& entity = entity_itr->second;
+	auto component = std::find_if(std::begin(entity.components), std::end(entity.components),
+		[&](const ComponentData& component_data){return component_data.type == component_type; });
+	if (component == std::end(entity.components)) {
 		return nullptr;
 	}
 
-	return component->second;
+	return component->component;
+}
+
+void EntityManager::notify_systems_created(const ComponentData& component)
+{
+	auto listeners_itr = _component_type_listeners.find(component.type);
+	if (listeners_itr == std::end(_component_type_listeners)) {
+		return;
+	}
+
+	for (System* system : listeners_itr->second) {
+		//todo maybe pass id as parameter to this function
+		//todo maybe pass component to notify_created
+		system->notify_created(component.entity_id);
+	}
+}
+
+void EntityManager::verify_entity_exists(unsigned int entity_id) const
+{
+	assert2(entities.find(entity_id) != std::end(entities),
+		"Unable to find entity with id=%u.", entity_id);
 }
