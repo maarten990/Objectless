@@ -20,10 +20,6 @@ struct KeyboardInput : public Component {
         keybinds = keys;
     }
 
-    static type_index id() {
-        return typeid(KeyboardInput);
-    }
-
     // Map contains possible key presses and their consequence (function
     // pointer)
     map<SDL_Keycode, std::function<void()>> keybinds;

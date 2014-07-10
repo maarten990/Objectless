@@ -19,9 +19,6 @@ struct Graphics : Component {
 	    SDL_DestroyTexture(texture);
 	}
 
-	static type_index id() {
-	    return typeid(Graphics);
-	}
 
 	SDL_Texture *texture;
 	int width;
@@ -32,10 +29,6 @@ struct Position : Component {
 	float x;
 	float y;
 	float rotation;
-
-	static type_index id() {
-	    return typeid(Position);
-	}
 };
 
 #endif

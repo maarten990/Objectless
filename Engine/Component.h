@@ -13,9 +13,6 @@ class Component
 {
 public:
     static map<int, function<Component*(void*)> > factory;
-    type_index get_id() {
-        return typeid(*this);
-    }
     virtual ~Component() {}
 };
 
