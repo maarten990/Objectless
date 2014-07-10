@@ -10,7 +10,6 @@
 #include "Component.h"
 #include "System.h"
 
-using namespace std;
 
 /* Provides an interface for the creation and destruction of components. */
 class ComponentManager {
@@ -29,14 +28,13 @@ public:
 
 	/* Return a pointer to the type_index corresponding to its string
 	 * representation. Returns NULL for an unknown/invalid name. */
-	type_index *index_from_name(string name);
+	std::type_index *index_from_name(const std::string& name);
 
 private:
-	map<type_index, function<Component*()> > _constructors;
+	std::map<type_index, std::function<Component*()> > _constructors;
 
 	/* a mapping of type_info strings to a corresponding type_index object */
-	map<string, type_index> _type_indices;
-	
+	std::map<string, std::type_index> _type_indices;
 };
 
 #endif
