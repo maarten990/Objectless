@@ -20,9 +20,9 @@ struct Graphics : Component {
 	}
 
 
-	SDL_Texture *texture;
-	int width;
-	int height;
+	SDL_Texture *texture = nullptr;
+	int width = 0;
+	int height = 0;
 };
 
 struct Position : Component {
