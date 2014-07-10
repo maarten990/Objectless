@@ -22,8 +22,9 @@ public:
 	 * type of component. */
 	template <typename T>
 	void register_component() {
-		_constructors[T::id()] = []() { return new T(); };
-		_type_indices.insert(make_pair(typeid(T).name(), T::id()));
+		std::type_index type(typeid(T));
+		_constructors[type] = [] { return new T(); };
+		_type_indices.insert(std::make_pair(type.name(), type));
 	}
 
 	/* Return a pointer to the type_index corresponding to its string
