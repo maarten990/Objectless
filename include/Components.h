@@ -4,6 +4,8 @@
 #include "SDL.h"
 #include "Engine/Component.h"
 
+#include <Box2D/Common/b2Math.h>
+
 struct Graphics : Component {
 	Graphics()
 	{
@@ -25,10 +27,18 @@ struct Graphics : Component {
 	int height = 0;
 };
 
-struct Position : Component {
+struct Transform : Component {
+	Transform()
+	{
+		position.SetZero();
+		rotation.SetIdentity();
+	}
+
+	b2Vec2 position;
+	b2Rot rotation;
+
 	float x;
 	float y;
-	float rotation;
 };
 
 #endif
