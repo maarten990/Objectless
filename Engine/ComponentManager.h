@@ -27,9 +27,6 @@ public:
 		_type_indices.insert(make_pair(typeid(T).name(), T::id()));
 	}
 
-	/* Create a component of the given type, belonging to a given entity. */
-	Component *construct(type_index type);
-
 	/* Return a pointer to the type_index corresponding to its string
 	 * representation. Returns NULL for an unknown/invalid name. */
 	type_index *index_from_name(string name);

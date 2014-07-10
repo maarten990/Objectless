@@ -13,12 +13,7 @@ ComponentManager::~ComponentManager()
 {
 }
 
-Component *ComponentManager::construct(type_index type)
 {
-	Component *component = _constructors[type]();
-
-	return component;
-}
 
 type_index *ComponentManager::index_from_name(string name)
 {
