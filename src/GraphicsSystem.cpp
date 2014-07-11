@@ -7,31 +7,27 @@
 #include "Engine/EntityManager.h"
 #include "Assert2.h"
 
-
 GraphicsSystem::GraphicsSystem(EntityManager *em)
 {
 	_window = SDL_CreateWindow("Objectless", SDL_WINDOWPOS_UNDEFINED,
-			SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
+		SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
 	_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED |
-		   	SDL_RENDERER_PRESENTVSYNC);
+		SDL_RENDERER_PRESENTVSYNC);
 
 	_entitymanager = em;
 
-    // Initialize the flags for image lib
-    if(!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-			assert2(false, "IMG_Init failed!! %s", SDL_GetError());
-			exit(0);
-    }
+	// Initialize the flags for image lib
+	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+		assert2(false, "IMG_Init failed!! %s", SDL_GetError());
+		exit(0);
+	}
 }
-
-
 
 GraphicsSystem::~GraphicsSystem()
 {
 	SDL_DestroyWindow(_window);
 	SDL_DestroyRenderer(_renderer);
 }
-
 
 // Load a texture from file
 SDL_Texture* GraphicsSystem::loadTexture(const std::string& path)
@@ -52,29 +48,29 @@ SDL_Texture* GraphicsSystem::loadTexture(const std::string& path)
 void GraphicsSystem::step(float /*delta_time*/)
 {
 	SDL_SetRenderDrawColor(_renderer, 0x00, 0x00, 0x5B, 0xFF);
-    SDL_RenderClear(_renderer);
+	SDL_RenderClear(_renderer);
 
-    for (unsigned int id: _entities) {
-        Graphics *g = _entitymanager->get_component<Graphics>(id);
-        Transform *p = _entitymanager->get_component<Transform>(id);
+	for (unsigned int id : _entities) {
+		Graphics *g = _entitymanager->get_component<Graphics>(id);
+		Transform *p = _entitymanager->get_component<Transform>(id);
 
-        /* create destination rect using the desired position 
-         * and the texture's dimensions */
-        SDL_Rect dest;
-        dest.x = (int)p->x;
-        dest.y = (int)p->y;
-        dest.w = g->width;
-        dest.h = g->height;
+		/* create destination rect using the desired position
+		 * and the texture's dimensions */
+		SDL_Rect dest;
+		dest.x = (int)p->x;
+		dest.y = (int)p->y;
+		dest.w = g->width;
+		dest.h = g->height;
 
-        SDL_RenderCopy(_renderer, g->texture, nullptr, &dest);
-    }
+		SDL_RenderCopy(_renderer, g->texture, nullptr, &dest);
+	}
 
-		for (auto post_render_callback : _post_render_callbacks)
-		{
-			post_render_callback.function();
-		}
+	for (auto post_render_callback : _post_render_callbacks)
+	{
+		post_render_callback.function();
+	}
 
-    SDL_RenderPresent(_renderer);
+	SDL_RenderPresent(_renderer);
 }
 
 uint64_t GraphicsSystem::registerPostRenderCallback(const std::function<void()> callback)

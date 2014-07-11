@@ -10,7 +10,6 @@
 #include "Component.h"
 #include "System.h"
 
-
 /* Provides an interface for the creation and destruction of components. */
 class ComponentManager {
 public:

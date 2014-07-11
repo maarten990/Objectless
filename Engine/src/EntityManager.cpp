@@ -6,7 +6,6 @@
 #include "Engine/EntityManager.h"
 #include "Engine/System.h"
 
-
 void EntityManager::remove_entity(unsigned int entity_id)
 {
 	verify_entity_exists(entity_id);

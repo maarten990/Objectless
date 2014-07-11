@@ -12,15 +12,14 @@ struct Graphics : Component {
 	}
 
 	Graphics(SDL_Texture *texture)
-       	{
-	    this->texture = texture;
-	}
-
-	~Graphics() 
 	{
-	    SDL_DestroyTexture(texture);
+		this->texture = texture;
 	}
 
+	~Graphics()
+	{
+		SDL_DestroyTexture(texture);
+	}
 
 	SDL_Texture *texture = nullptr;
 	int width = 0;

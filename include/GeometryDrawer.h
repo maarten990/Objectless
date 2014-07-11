@@ -19,7 +19,6 @@ class GeometryDrawer : public System
 		uint32_t color_rgba;
 	};
 
-
 public:
 	GeometryDrawer(SDL_Renderer* renderer, GraphicsSystem* graphics_system);
 	~GeometryDrawer();

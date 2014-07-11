@@ -8,7 +8,6 @@
 
 class System;
 
-
 /* Provides an interface to create, destroy or modify an entity and its
  * components. */
 //todo maybe add listener for entity creation/destruction
@@ -35,7 +34,6 @@ public:
 
 		std::vector<ComponentData> components;
 	};
-
 
 	unsigned int create_entity()
 	{
@@ -76,13 +74,13 @@ public:
 
 		assert2(get_component<ComponentType>(entity_id) == nullptr,
 			"Entity %u already has a component of type '%s'.", entity_id, component_data.type.name());
-		
+
 		entity.components.push_back(component_data);
 	}
 
 	template <typename ComponentType>
 	void remove_component(unsigned int entity_id)
-{
+	{
 		remove_component(entity_id, typeid(ComponentType));
 	}
 
@@ -156,7 +154,6 @@ private:
 	/* Find component belonging to the specified entity. Returns null if the entity
 	 * does not have a component of that type. */
 	Component* find_component(unsigned int entity_id, const std::type_index& component_type);
-
 
 	// Used to generate unique IDs for entities.
 	unsigned int _next_id = 0;

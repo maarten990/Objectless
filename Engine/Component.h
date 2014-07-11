@@ -12,8 +12,8 @@ using namespace std;
 class Component
 {
 public:
-    static map<int, function<Component*(void*)> > factory;
-    virtual ~Component() {}
+	static map<int, function<Component*(void*)> > factory;
+	virtual ~Component() {}
 };
 
 #endif
