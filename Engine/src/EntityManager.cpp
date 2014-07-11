@@ -7,14 +7,6 @@
 #include "Engine/System.h"
 
 
-EntityManager::EntityManager()
-{
-}
-
-EntityManager::~EntityManager()
-{
-}
-
 void EntityManager::remove_entity(unsigned int entity_id)
 {
 	verify_entity_exists(entity_id);

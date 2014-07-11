@@ -41,9 +41,6 @@ public:
 		std::vector<ComponentData> components;
 	};
 
-	EntityManager();
-	~EntityManager();
-
 
 	unsigned int create_entity()
 	{
