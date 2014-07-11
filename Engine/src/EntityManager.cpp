@@ -4,6 +4,7 @@
 #include <sstream>
 #include "Engine/Component.h"
 #include "Engine/EntityManager.h"
+#include "Engine/System.h"
 
 
 EntityManager::EntityManager()

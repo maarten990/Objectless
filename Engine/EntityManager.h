@@ -4,8 +4,10 @@
 #include <typeindex>
 #include <string>
 #include "Component.h"
-#include "ComponentManager.h"
 #include "Assert2.h"
+
+class System;
+
 
 /* Provides an interface to create, destroy or modify an entity and its
  * components. */
