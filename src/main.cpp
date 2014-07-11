@@ -11,6 +11,8 @@
 #include "Engine/EntityManager.h"
 #include "Engine/SystemManager.h"
 #include "Engine/ComponentManager.h"
+#include "Engine/Physics/PhysicsWorld.h"
+#include "Engine/Physics/Box2DDebugDraw.h"
 #include "GeometryDrawer.h"
 
 #include "Components.h"
@@ -53,6 +55,10 @@ int main()
 	GraphicsSystem *graphics = new GraphicsSystem(&em);
 	EventSystem *events = new EventSystem(&running, &em);
 	GeometryDrawer* geometryDrawer = new GeometryDrawer(graphics->getRenderer(), graphics);
+	PhysicsWorld* physics_world = new PhysicsWorld();
+	Box2DDebugDraw* box2d_debug_draw = new Box2DDebugDraw(graphics->getRenderer(), *graphics, physics_world->getWorld());
+	box2d_debug_draw->SetFlags(b2Draw::e_aabbBit | b2Draw::e_jointBit | b2Draw::e_aabbBit | b2Draw::e_pairBit | b2Draw::e_centerOfMassBit);
+	physics_world->getWorld().SetDebugDraw(box2d_debug_draw);
 
 	/* register systems */
 	em.register_system<Graphics, Transform>(graphics);
@@ -95,6 +101,7 @@ int main()
 	manager.add(graphics);
 	manager.add(events);
 	manager.add(geometryDrawer);
+	manager.add(physics_world);
 
 #ifdef WITH_LUA
 	/* add a REPL if the input is redirected */
