@@ -31,12 +31,7 @@ public:
 	};
 	struct Entity
 	{
-		Entity()
-			: id(~0u)
-		{
-		}
-
-		unsigned int id;
+		unsigned int id = ~0u;
 
 		std::vector<ComponentData> components;
 	};
