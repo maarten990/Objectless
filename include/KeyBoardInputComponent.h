@@ -14,15 +14,14 @@ using namespace std;
 // to and a pointer to the function it might react to
 
 struct KeyboardInput : public Component {
-
     KeyboardInput() {}
-    KeyboardInput(map<SDL_Keycode, std::function<void()>> keys) {
+    KeyboardInput(map<SDL_Keycode, map<Uint32, std::function<void()> > > keys) {
         keybinds = keys;
     }
 
     // Map contains possible key presses and their consequence (function
     // pointer)
-    map<SDL_Keycode, std::function<void()>> keybinds;
+    map<SDL_Keycode, map<Uint32, std::function<void()> > > keybinds;
 
 };
 #endif

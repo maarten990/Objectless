@@ -18,6 +18,7 @@ struct Graphics : Component {
 
 	~Graphics() 
 	{
+		/* TODO: maybe destroy the texture in a more appropriate place */
 	    SDL_DestroyTexture(texture);
 	}
 
@@ -39,6 +40,13 @@ struct Transform : Component {
 
 	float x;
 	float y;
+};
+
+struct Movement : Component {
+	float x_multiplier;
+	float y_multiplier;
+	float x_speed;
+	float y_speed;
 };
 
 #endif

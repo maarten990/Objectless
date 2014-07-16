@@ -17,6 +17,7 @@
 #include "GraphicsSystem.h"
 #include "KeyBoardInputComponent.h"
 #include "EventSystem.h"
+#include "MovementSystem.h"
 
 #ifdef WITH_LUA
 #include "lua/REPLSystem.h"
@@ -53,13 +54,17 @@ int main()
     GraphicsSystem *graphics = new GraphicsSystem(&em);
     EventSystem *events = new EventSystem(&running, &em);
 		GeometryDrawer* geometryDrawer = new GeometryDrawer(graphics->getRenderer(), graphics);
+    MovementSystem *movement = new MovementSystem(&em);
 
     /* register systems */
     em.register_system<Graphics, Transform>(graphics);
     em.register_system<KeyboardInput>(events);
+    em.register_system<Movement, Transform>(movement);
 		em.register_system<Transform>(geometryDrawer);
 
-		unsigned int player = em.create_entity<KeyboardInput, Graphics, Transform>();
+		unsigned int player = em.create_entity<KeyboardInput, Graphics, Transform, Movement>();
+	em.get_component<Movement>(player)->x_speed = 2.5;
+	em.get_component<Movement>(player)->y_speed = 2.5;
 
     /* graphics stuff */
     SDL_Texture* t = graphics->loadTexture("../images/ball.bmp");
@@ -72,12 +77,20 @@ int main()
     em.get_component<Transform>(player)->y = 75;
 
     /* keyboard stuff */
-    std::map<SDL_Keycode, std::function<void()>> keys;
-    keys[SDLK_w] = [&em, &player]() {em.get_component<Transform>(player)->y -= 5; }; 
-    keys[SDLK_a] = [&em, &player]() {em.get_component<Transform>(player)->x -= 5; }; 
-    keys[SDLK_s] = [&em, &player]() {em.get_component<Transform>(player)->y += 5; }; 
-    keys[SDLK_d] = [&em, &player]() {em.get_component<Transform>(player)->x += 5; }; 
-    keys[SDLK_h] = [&t, &em, &player]() {
+    std::map<SDL_Keycode, std::map<Uint32, std::function<void()> > > keys;
+    keys[SDLK_w][SDL_KEYDOWN] = [&em, &player]() {em.get_component<Movement>(player)->y_multiplier = -1; }; 
+    keys[SDLK_w][SDL_KEYUP] = [&em, &player]() {em.get_component<Movement>(player)->y_multiplier = 0; }; 
+
+    keys[SDLK_a][SDL_KEYDOWN] = [&em, &player]() {em.get_component<Movement>(player)->x_multiplier = -1; }; 
+    keys[SDLK_a][SDL_KEYUP] = [&em, &player]() {em.get_component<Movement>(player)->x_multiplier = 0; }; 
+
+    keys[SDLK_s][SDL_KEYDOWN] = [&em, &player]() {em.get_component<Movement>(player)->y_multiplier = 1; }; 
+    keys[SDLK_s][SDL_KEYUP] = [&em, &player]() {em.get_component<Movement>(player)->y_multiplier = 0; }; 
+
+    keys[SDLK_d][SDL_KEYDOWN] = [&em, &player]() {em.get_component<Movement>(player)->x_multiplier = 1; }; 
+    keys[SDLK_d][SDL_KEYUP] = [&em, &player]() {em.get_component<Movement>(player)->x_multiplier = 0; }; 
+
+    keys[SDLK_h][SDL_KEYDOWN] = [&t, &em, &player]() {
         if (em.get_component<Graphics>(player))
 					em.remove_component<Graphics>(player);
         else {
@@ -95,6 +108,7 @@ int main()
     manager.add(graphics);
     manager.add(events);
 		manager.add(geometryDrawer);
+	manager.add(movement);
 
 #ifdef WITH_LUA
     /* add a REPL if the input is redirected */
