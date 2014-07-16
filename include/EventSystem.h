@@ -11,7 +11,7 @@ public:
 	~EventSystem();
 	void step(float delta_time);
 	bool *running;
-	void handle_keyevent(SDL_Keycode k);
+	void handle_keyevent(SDL_Keycode k, Uint32 type);
 
 private:
 	EntityManager *_entitymanager;

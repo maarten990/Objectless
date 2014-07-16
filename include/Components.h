@@ -41,4 +41,11 @@ struct Transform : Component {
 	float y;
 };
 
+struct Movement : Component {
+	float x_multiplier;
+	float y_multiplier;
+	float x_speed;
+	float y_speed;
+};
+
 #endif
