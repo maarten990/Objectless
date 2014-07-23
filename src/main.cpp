@@ -190,9 +190,8 @@ int main()
 		for (unsigned int j = 0; j < 4; ++j)
 		{
 			const b2Vec2 scale(1.0f, 1.0f);
-			const float img_size = 64.0f; // todo get from image size
-			const b2Vec2 position(350.0f + img_size * scale.x * i,
-				200.0f + img_size * scale.y * j);
+			const b2Vec2 position(350.0f + texture->getWidth() * scale.x * i,
+				200.0f + texture->getHeight() * scale.y * j);
 			createRB(em, texture, position, scale);
 		}
 	}
