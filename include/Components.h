@@ -16,11 +16,10 @@ struct Graphics : Component {
 };
 
 struct Transform : Component {
-
-	float x;
-	float y;
 	b2Vec2 position = b2Vec2(0.0f, 0.0f);
 	b2Rot rotation = b2Rot(0.0f);
+	//Note: Does not affect physics, only visuals.
+	b2Vec2 scale = b2Vec2(1.0f, 1.0f);
 };
 
 #endif
