@@ -27,17 +27,11 @@ struct Graphics : Component {
 };
 
 struct Transform : Component {
-	Transform()
-	{
-		position.SetZero();
-		rotation.SetIdentity();
-	}
-
-	b2Vec2 position;
-	b2Rot rotation;
 
 	float x;
 	float y;
+	b2Vec2 position = b2Vec2(0.0f, 0.0f);
+	b2Rot rotation = b2Rot(0.0f);
 };
 
 #endif
