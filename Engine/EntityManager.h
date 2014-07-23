@@ -120,6 +120,7 @@ private:
 		//todo maybe allocate somewhere to make all components of one type contiguous;
 		//can improve cpu time in some cases.
 		ComponentData component_data(new Component1(), typeid(Component1), entity.id);
+		component_data.component->entity_id = entity.id;
 		notify_systems_created(component_data);
 		return component_data;
 	}
