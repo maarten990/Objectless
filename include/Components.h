@@ -3,14 +3,16 @@
 
 #include "SDL.h"
 #include "Engine/Component.h"
+#include <memory>
 
 #include <Box2D/Common/b2Math.h>
 
 struct Graphics : Component {
+class Texture;
 
-	SDL_Texture *texture = nullptr;
 	int width = 0;
 	int height = 0;
+	std::shared_ptr<Texture> texture;
 	//Should this component be visible?
 	bool is_visible = true;
 };
