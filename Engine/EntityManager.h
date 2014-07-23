@@ -67,7 +67,7 @@ public:
 	/* Add or remove a component from an entity. Every entity is assumed to have
 	 * a maximum of one instance of each type of component. */
 	template <typename ComponentType>
-	void add_component(unsigned int entity_id)
+	ComponentType& add_component(unsigned int entity_id)
 	{
 		verify_entity_exists(entity_id);
 		Entity& entity = entities[entity_id];
@@ -78,6 +78,8 @@ public:
 			"Entity %u already has a component of type '%s'.", entity_id, component_data.type.name());
 
 		entity.components.push_back(component_data);
+
+		return static_cast<ComponentType&>(*component_data.component);
 	}
 
 	template <typename ComponentType>
