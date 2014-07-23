@@ -53,6 +53,9 @@ void GraphicsSystem::step(float /*delta_time*/)
 	for (unsigned int id : _entities) {
 		Graphics *g = _entitymanager->get_component<Graphics>(id);
 		Transform *p = _entitymanager->get_component<Transform>(id);
+		if (!g->is_visible) {
+			continue;
+		}
 
 		/* create destination rect using the desired position
 		 * and the texture's dimensions */

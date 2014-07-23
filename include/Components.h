@@ -11,6 +11,8 @@ struct Graphics : Component {
 	SDL_Texture *texture = nullptr;
 	int width = 0;
 	int height = 0;
+	//Should this component be visible?
+	bool is_visible = true;
 };
 
 struct Transform : Component {
