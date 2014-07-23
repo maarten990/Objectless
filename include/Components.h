@@ -7,11 +7,9 @@
 
 #include <Box2D/Common/b2Math.h>
 
-struct Graphics : Component {
 class Texture;
 
-	int width = 0;
-	int height = 0;
+struct Graphics : Component {
 	std::shared_ptr<Texture> texture;
 	//Should this component be visible?
 	bool is_visible = true;
