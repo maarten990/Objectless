@@ -8,32 +8,34 @@
 
 class System;
 
+struct ComponentData
+{
+	ComponentData(Component* component, const std::type_index& type,
+		unsigned int entity_id)
+		: component(component)
+		, type(type)
+		, entity_id(entity_id)
+	{
+	}
+
+	Component* component;
+	std::type_index type;
+	unsigned int entity_id;
+};
+struct Entity
+{
+	unsigned int id = ~0u;
+
+	std::vector<ComponentData> components;
+};
+
 /* Provides an interface to create, destroy or modify an entity and its
  * components. */
 //todo maybe add listener for entity creation/destruction
 class EntityManager
 {
 public:
-	struct ComponentData
-	{
-		ComponentData(Component* component, const std::type_index& type,
-			unsigned int entity_id)
-			: component(component)
-			, type(type)
-			, entity_id(entity_id)
-		{
-		}
-
-		Component* component;
-		std::type_index type;
-		unsigned int entity_id;
-	};
-	struct Entity
-	{
-		unsigned int id = ~0u;
-
-		std::vector<ComponentData> components;
-	};
+	
 
 	unsigned int create_entity()
 	{
