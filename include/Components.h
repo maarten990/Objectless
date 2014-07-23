@@ -7,19 +7,6 @@
 #include <Box2D/Common/b2Math.h>
 
 struct Graphics : Component {
-	Graphics()
-	{
-	}
-
-	Graphics(SDL_Texture *texture)
-	{
-		this->texture = texture;
-	}
-
-	~Graphics()
-	{
-		SDL_DestroyTexture(texture);
-	}
 
 	SDL_Texture *texture = nullptr;
 	int width = 0;
