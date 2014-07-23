@@ -79,7 +79,7 @@ void EntityManager::notify_systems_created(const ComponentData& component)
 	for (System* system : listeners_itr->second) {
 		//todo maybe pass id as parameter to this function
 		//todo maybe pass component to notify_created
-		system->notify_created(component.entity_id);
+		system->notify_created(component.entity_id, component);
 	}
 }
 

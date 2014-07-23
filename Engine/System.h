@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "Component.h"
 
+struct ComponentData;
 class EntityManager;
 
 /* Superclass for all systems */
@@ -19,14 +20,14 @@ public:
 	/* Gets called when an entity is created which should be handled by the
 	 * system.
 	 * See also: ComponentManager::register */
-	void notify_created(unsigned int entity) {
+	virtual void notify_created(unsigned int entity, const ComponentData&) {
 		_entities.push_back(entity);
 	}
 
 	/* Gets called when an entity is destroyed which should be handled by the
 	 * system.
 	 * See also: ComponentManager::register */
-	void notify_destroyed(unsigned int removed_entity) {
+	virtual void notify_destroyed(unsigned int removed_entity) {
 		auto iterator = std::find(_entities.begin(), _entities.end(),
 			removed_entity);
 
