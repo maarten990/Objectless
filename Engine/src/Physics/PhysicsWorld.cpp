@@ -2,20 +2,15 @@
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
 #include "Timer.h"
-#include <windows.h>
+#include "Engine/Physics/PhysicsBodyComponent.h"
+#include "Engine/EntityManager.h"
+#include "Components.h"
 
 
-PhysicsWorld::PhysicsWorld(const b2Vec2& gravity /*= b2Vec2(0.0f, -9.81f)*/)
+PhysicsWorld::PhysicsWorld(EntityManager& entity_manager, const b2Vec2& gravity /*= b2Vec2(0.0f, -9.81f)*/)
 	: world(gravity)
+	, entity_manager(entity_manager)
 {
-	b2BodyDef def;
-	def.type = b2_dynamicBody;
-	def.position.Set(250.0f, 250.0f);
-	def.gravityScale = 0.0f;
-	b2Body& body = *world.CreateBody(&def);
-	b2Shape* shape = new b2CircleShape();
-	shape->m_radius = 20.0f;
-	body.CreateFixture(shape, 1.0f);
 }
 
 void PhysicsWorld::step(float delta_time)
@@ -23,7 +18,6 @@ void PhysicsWorld::step(float delta_time)
 	accumulated_delta_time += delta_time;
 
 	unsigned int num_steps = 0;
-	Timer timer;
 
 	while (accumulated_delta_time > fixed_delta_time)
 	{
@@ -34,14 +28,37 @@ void PhysicsWorld::step(float delta_time)
 
 	if (num_steps != 0)
 	{
-		//update visual positions???????
-		double duration_ms = timer.seconds_since_start() * 1000.0;
-		printf("Physics stepped %u times in %.2f ms (avg %.2f ms per step)\n",
-			num_steps, duration_ms, duration_ms / num_steps);
+		syncTransforms();
 	}
 }
 
 void PhysicsWorld::stepWorld()
 {
 	world.Step(fixed_delta_time, num_velocity_iterations, num_position_iterations);
+}
+
+void PhysicsWorld::notify_created(unsigned int entity_id, const ComponentData& component_data)
+{
+	System::notify_created(entity_id, component_data);
+
+	//Create and link Box2D body to the component.
+	PhysicsBodyComponent& component = *static_cast<PhysicsBodyComponent*>(component_data.component);
+	b2BodyDef def;
+	//This makes it possible to get a pointer to a component directly from a b2Body.
+	def.userData = &component;
+	component.body = world.CreateBody(&def);
+}
+
+void PhysicsWorld::syncTransforms()
+{
+	b2Body* body = world.GetBodyList();
+	do
+	{
+		const b2Transform& transform = body->GetTransform();
+		PhysicsBodyComponent& component = *(PhysicsBodyComponent*)body->GetUserData();
+		Transform& entity_transform = *entity_manager.get_component<Transform>(component.entity_id);
+		entity_transform.position = transform.p;
+		entity_transform.rotation = transform.q;
+
+	} while ((body = body->GetNext()) != nullptr);
 }

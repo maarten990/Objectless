@@ -9,15 +9,23 @@
 class PhysicsWorld : public System
 {
 public:
-	PhysicsWorld(const b2Vec2& gravity = b2Vec2(0.0f, -9.81f));
+	PhysicsWorld(EntityManager& entity_manager, const b2Vec2& gravity = b2Vec2(0.0f, -9.81f));
+
+	PhysicsWorld& operator=(const PhysicsWorld& other) = delete;
 
 	void step(float delta_time);
 
-
 	b2World& getWorld() { return world; }
+
+	void notify_created(unsigned int entity_id, const ComponentData& component_data) override;
 
 private:
 	void stepWorld();
+
+	/* Synchronize graphical transformation with physical transformation.
+	 * This keeps graphics and physics synchronized.
+	*/
+	void syncTransforms();
 
 	b2World world;
 	//Box2DDebugDraw debug_drawer;
@@ -36,4 +44,6 @@ private:
 	 * When this is greater than fixed_delta_time, the world is stepped.
 	 */
 	float accumulated_delta_time = 0.0f;
+
+	EntityManager& entity_manager;
 };
