@@ -7,10 +7,10 @@
 #include "Engine/EntityManager.h"
 #include "Assert2.h"
 
-GraphicsSystem::GraphicsSystem(EntityManager *em)
+GraphicsSystem::GraphicsSystem(EntityManager *em, int window_width, int window_height)
 {
 	_window = SDL_CreateWindow("Objectless", SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
+		SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_SHOWN);
 	_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED |
 		SDL_RENDERER_PRESENTVSYNC);
 

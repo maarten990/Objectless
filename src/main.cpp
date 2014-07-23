@@ -28,6 +28,9 @@
 #undef main
 
 
+const unsigned int window_width = 800;
+const unsigned int window_height = 640;
+
 void initialize_components(ComponentManager& mgr)
 {
 	mgr.register_component<KeyboardInput>();
@@ -52,7 +55,7 @@ int main()
 	// TODO: this bool pointer that gets passed around to two classes sucks
 	bool running = true;
 
-	GraphicsSystem *graphics = new GraphicsSystem(&em);
+	GraphicsSystem *graphics = new GraphicsSystem(&em, window_width, window_height);
 	EventSystem *events = new EventSystem(&running, &em);
 	GeometryDrawer* geometryDrawer = new GeometryDrawer(graphics->getRenderer(), graphics);
 	PhysicsWorld* physics_world = new PhysicsWorld();

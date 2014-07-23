@@ -15,7 +15,7 @@ class GraphicsSystem : public System
 		std::function<void()> function;
 	};
 public:
-	GraphicsSystem(EntityManager *em);
+	GraphicsSystem(EntityManager *em, int window_width, int window_height);
 	~GraphicsSystem();
 	SDL_Texture* loadTexture(const std::string& path);
 	void step(float delta_time);
