@@ -14,8 +14,9 @@ using namespace std;
 // to and a pointer to the function it might react to
 
 struct KeyboardInput : public Component {
-	// Map contains possible key presses and their consequence (function
-	// pointer)
-	map<SDL_Keycode, std::function<void()>> keybinds;
+    // Map contains possible key presses and their consequence (function
+    // pointer)
+    map<SDL_Keycode, map<Uint32, std::function<void()> > > keybinds;
+
 };
 #endif

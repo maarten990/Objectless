@@ -22,4 +22,11 @@ struct Transform : Component {
 	b2Vec2 scale = b2Vec2(1.0f, 1.0f);
 };
 
+struct Movement : Component {
+	float x_multiplier;
+	float y_multiplier;
+	float x_speed;
+	float y_speed;
+};
+
 #endif

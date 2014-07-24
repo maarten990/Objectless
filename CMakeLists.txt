@@ -4,7 +4,8 @@ project(Objectless)
 # find SDL
 if (UNIX)
     include(FindPkgConfig)
-    pkg_check_modules(SDL2 REQUIRED sdl2 SDL2_image box2d)
+    pkg_check_modules(SDL2 REQUIRED sdl2 SDL2_image)
+    find_package(Box2D REQUIRED)
 elseif(MSVC)
     set(SDL2_LOCATION "${CMAKE_SOURCE_DIR}" CACHE FILEPATH
         "The root folder of SDL2")
