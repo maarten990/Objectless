@@ -20,6 +20,7 @@
 #include "GraphicsSystem.h"
 #include "KeyBoardInputComponent.h"
 #include "EventSystem.h"
+#include "MovementSystem.h"
 #include "Engine/Physics/PhysicsBodyComponent.h"
 #include "Engine/Graphics/Texture.h"
 
@@ -62,7 +63,7 @@ void rotatePlayer(EntityManager& em, unsigned int player_id, float degrees)
 	body.ApplyAngularImpulse(degrees * 3000.0f, true);
 }
 
-void createPlayer(EntityManager& em, GraphicsSystem& graphics, GeometryDrawer& drawer)
+void createPlayer(EntityManager& em, GraphicsSystem& graphics)
 {
 	unsigned int player = em.create_entity<KeyboardInput, Graphics, Transform, PhysicsBodyComponent>();
 	b2Body& body = *em.get_component<PhysicsBodyComponent>(player)->body;
@@ -76,7 +77,7 @@ void createPlayer(EntityManager& em, GraphicsSystem& graphics, GeometryDrawer& d
 	body.SetTransform(b2Vec2(250.0f, 250.0f), 0.0f);
 
 	/* graphics stuff */
-	const char* path = "C:/Users/batman/Pictures/Puke.bmp";
+	const char* path = "../images/Puke.bmp";
 	auto texture = std::make_shared<Texture>(*graphics.getRenderer(), path);
 	em.get_component<Graphics>(player)->texture = texture;
 
@@ -84,14 +85,20 @@ void createPlayer(EntityManager& em, GraphicsSystem& graphics, GeometryDrawer& d
 	movement.speed.Set(2.5f, 2.5f);
 
 	/* keyboard stuff */
-	std::map<SDL_Keycode, std::function<void()>> keys;
-	keys[SDLK_w] = [&em, &drawer, player]() { movePlayer(em, player, b2Vec2(0.0f, -5.0f), drawer); };
-	keys[SDLK_s] = [&em, &drawer, player]() { movePlayer(em, player, b2Vec2(0.0f, 5.0f), drawer); };
+	std::map<SDL_Keycode, std::map<uint32_t, std::function<void()>>> keys;
+	keys[SDLK_w][SDL_KEYDOWN] = [&em, &player, &movement]() {movement.speed_multiplier.y = -1; };
+	keys[SDLK_w][SDL_KEYUP] = [&em, &player, &movement]() {movement.speed_multiplier.y = 0; };
 
-	keys[SDLK_a] = [&em, player]() { rotatePlayer(em, player, -1.0f); };
-	keys[SDLK_d] = [&em, player]() { rotatePlayer(em, player, 1.0f); };
+	keys[SDLK_a][SDL_KEYDOWN] = [&em, &player, &movement]() {movement.speed_multiplier.x = -1; };
+	keys[SDLK_a][SDL_KEYUP] = [&em, &player, &movement]() {movement.speed_multiplier.x = 0; };
 
-	keys[SDLK_h] = [texture, &em, player]() {
+	keys[SDLK_s][SDL_KEYDOWN] = [&em, &player, &movement]() {movement.speed_multiplier.y = 1; };
+	keys[SDLK_s][SDL_KEYUP] = [&em, &player, &movement]() {movement.speed_multiplier.y = 0; };
+
+	keys[SDLK_d][SDL_KEYDOWN] = [&em, &player, &movement]() {movement.speed_multiplier.x = 1; };
+	keys[SDLK_d][SDL_KEYUP] = [&em, &player, &movement]() {movement.speed_multiplier.x = 0; };
+
+	keys[SDLK_h][SDL_KEYDOWN] = [texture, &em, player]() {
 		Graphics& graphics = *em.get_component<Graphics>(player);
 		graphics.is_visible = !graphics.is_visible;
 	};
@@ -165,6 +172,7 @@ int main()
 	GraphicsSystem *graphics = new GraphicsSystem(&em, window_width, window_height);
 	EventSystem *events = new EventSystem(&running, &em);
 	GeometryDrawer* geometryDrawer = new GeometryDrawer(graphics->getRenderer(), graphics);
+	MovementSystem* movement = new MovementSystem(&em);
 	PhysicsWorld* physics_world = new PhysicsWorld(em, b2Vec2(0.0f, 981.0f)); // todo use less insane gravity
 	Box2DDebugDraw* box2d_debug_draw = new Box2DDebugDraw(graphics->getRenderer(), *graphics, physics_world->getWorld());
 	box2d_debug_draw->SetFlags(
@@ -180,10 +188,11 @@ int main()
 	/* register systems */
 	em.register_system<Graphics>(graphics);
 	em.register_system<KeyboardInput>(events);
+	em.register_system<PhysicsBodyComponent, Movement>(movement);
 	em.register_system<Transform>(geometryDrawer);
 	em.register_system<PhysicsBodyComponent>(physics_world);
 
-	createPlayer(em, *graphics, *geometryDrawer);
+	createPlayer(em, *graphics);
 
 	createWorldEdges(em);
 
@@ -205,6 +214,7 @@ int main()
 	manager.add(events);
 	manager.add(geometryDrawer);
 	manager.add(physics_world);
+	manager.add(movement);
 
 #ifdef WITH_LUA
 	/* add a REPL if the input is redirected */
