@@ -23,10 +23,8 @@ struct Transform : Component {
 };
 
 struct Movement : Component {
-	float x_multiplier;
-	float y_multiplier;
-	float x_speed;
-	float y_speed;
+	b2Vec2 speed = b2Vec2(0.0f, 0.0f);
+	b2Vec2 speed_multiplier = b2Vec2(0.0f, 0.0f);
 };
 
 #endif

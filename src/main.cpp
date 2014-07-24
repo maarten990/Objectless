@@ -80,6 +80,9 @@ void createPlayer(EntityManager& em, GraphicsSystem& graphics, GeometryDrawer& d
 	auto texture = std::make_shared<Texture>(*graphics.getRenderer(), path);
 	em.get_component<Graphics>(player)->texture = texture;
 
+	Movement& movement = em.add_component<Movement>(player);
+	movement.speed.Set(2.5f, 2.5f);
+
 	/* keyboard stuff */
 	std::map<SDL_Keycode, std::function<void()>> keys;
 	keys[SDLK_w] = [&em, &drawer, player]() { movePlayer(em, player, b2Vec2(0.0f, -5.0f), drawer); };
