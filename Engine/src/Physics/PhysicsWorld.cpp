@@ -1,7 +1,6 @@
 #include "Engine/Physics/PhysicsWorld.h"
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
-#include "Timer.h"
 #include "Engine/Physics/PhysicsBodyComponent.h"
 #include "Engine/EntityManager.h"
 #include "Components.h"
