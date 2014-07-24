@@ -55,8 +55,9 @@ void Box2DDebugDraw::DrawCircle(const b2Vec2& center, float32 radius, const b2Co
 	aacircleColor(_renderer, (int16_t)center.x, (int16_t)center.y, (int16_t)radius, toColor32(color));
 }
 
-void Box2DDebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
+void Box2DDebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& /*axis*/, const b2Color& color)
 {
+	//todo figure out what the 'axis' parameter represents
 	filledCircleColor(_renderer, (int16_t)center.x, (int16_t)center.y, (int16_t)radius, toColor32(color));
 }
 
@@ -94,11 +95,11 @@ void Box2DDebugDraw::draw()
 	if (SDL_BUTTON(buttons) == SDL_BUTTON_LEFT)
 	{
 		b2Body& body = world.GetBodyList()[0];
-		b2Vec2 dir = b2Vec2(mouse_x, mouse_y) - body.GetPosition();
-		dir *= 1000.0f;
+		b2Vec2 dir = b2Vec2((float)mouse_x, (float)mouse_y) - body.GetPosition();
+		dir *= 100.0f;
 		b2Rot rot = body.GetTransform().q;
 		body.ApplyForceToCenter(dir, true);
-		aalineColor(_renderer, body.GetPosition().x, body.GetPosition().y, mouse_x, mouse_y, 0xFFFFFFFF);
+		aalineColor(_renderer, (int16_t)body.GetPosition().x, (int16_t)body.GetPosition().y, (int16_t)mouse_x, (int16_t)mouse_y, 0xFFFFFFFF);
 	}
 	world.DrawDebugData();
 }
