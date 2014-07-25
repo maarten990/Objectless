@@ -48,6 +48,15 @@ void PhysicsWorld::notify_created(unsigned int entity_id)
 	component.body = world.CreateBody(&def);
 }
 
+void PhysicsWorld::notify_will_destroy(unsigned int entity_id)
+{
+	System::notify_will_destroy(entity_id);
+
+	//Remove Box2D body from physics world.
+	auto& component = *entity_manager.get_component<PhysicsBodyComponent>(entity_id);
+	world.DestroyBody(component.body);
+}
+
 void PhysicsWorld::syncTransforms()
 {
 	b2Body* body = world.GetBodyList();

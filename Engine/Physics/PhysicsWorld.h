@@ -19,6 +19,8 @@ public:
 
 	void notify_created(unsigned int entity_id) override;
 
+	void notify_will_destroy(unsigned int entity_id) override;
+
 private:
 	void stepWorld();
 
