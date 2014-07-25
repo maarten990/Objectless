@@ -10,9 +10,11 @@ void EntityManager::remove_entity(unsigned int entity_id)
 {
 	verify_entity_exists(entity_id);
 
-	for (ComponentData& component_data : entities[entity_id].components) {
-		remove_component(entity_id, component_data.type);
-		delete component_data.component;
+	Entity& entity = entities[entity_id];
+	while (!entity.components.empty()) {
+		ComponentData& last = entity.components[entity.components.size() - 1];
+		remove_component(entity_id, last.type);
+		delete last.component;
 	}
 
 	entities.erase(entity_id);
@@ -20,18 +22,15 @@ void EntityManager::remove_entity(unsigned int entity_id)
 
 void EntityManager::remove_component(unsigned int entity_id, const std::type_index& type)
 {
+	verify_entity_exists(entity_id);
 	assert2(find_component(entity_id, type) != nullptr,
 		"Entity %u has no component of type '%s'.", entity_id, type.name());
-
-	/* notify each system that requests this type about this entity losing it */
-	auto listener_itr = _component_type_listeners.find(type);
-	for (System* system : listener_itr->second) {
-		system->notify_destroyed(entity_id);
-	}
 
 	Entity& entity = entities[entity_id];
 	auto itr = std::find_if(std::begin(entity.components), std::end(entity.components),
 		[&](const ComponentData& component) { return component.type == type; });
+
+	notify_systems_will_destroy(*itr);
 
 	entity.components.erase(itr);
 }
@@ -71,15 +70,48 @@ Component* EntityManager::find_component(unsigned int entity_id, const std::type
 
 void EntityManager::notify_systems_created(const ComponentData& component)
 {
-	auto listeners_itr = _component_type_listeners.find(component.type);
-	if (listeners_itr == std::end(_component_type_listeners)) {
-		return;
-	}
+	for (Listener& listener : listeners)
+	{
+		const auto& ents = listener.system->getEntities();
+		if (std::find(std::begin(ents), std::end(ents), component.entity_id)
+			!= std::end(ents))
+		{
+			//This system has already been notified about this entity.
+			continue;
+		}
 
-	for (System* system : listeners_itr->second) {
-		//todo maybe pass id as parameter to this function
-		//todo maybe pass component to notify_created
-		system->notify_created(component.entity_id, component);
+		if (std::all_of(std::begin(listener.types), std::end(listener.types),
+			[this, &component](const std::type_index& type) {
+			return find_component(component.entity_id, type) != nullptr
+				|| type == component.type; }))
+		{
+			//The entity has all of the components required by this listener.
+			listener.system->notify_created(component.entity_id);
+		}
+	}
+}
+
+void EntityManager::notify_systems_will_destroy(const ComponentData& component)
+{
+	for (Listener& listener : listeners)
+	{
+		const std::vector<unsigned int>& entities2 = listener.system->getEntities();
+		if (!std::any_of(std::begin(entities2), std::end(entities2),
+			[&component](unsigned int entity_id) { return entity_id == component.entity_id; }))
+		{
+			/* System does not have a reference to this entity.
+			* This can be happen when a system requires multiple types of components
+			* to be attached to an entity at the same time, and not all of those
+			* components being attached currently.
+			*/
+			continue;
+		}
+
+		if (std::any_of(std::begin(listener.types), std::end(listener.types),
+			[&component](const std::type_index& type) {return component.type == type; }))
+		{
+			listener.system->notify_will_destroy(component.entity_id);
+		}
 	}
 }
 

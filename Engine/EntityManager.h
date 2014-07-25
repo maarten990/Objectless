@@ -34,9 +34,13 @@ struct Entity
 //todo maybe add listener for entity creation/destruction
 class EntityManager
 {
+	struct Listener
+	{
+		//The types an entity must have in order for this listener to trigger.
+		std::vector<std::type_index> types;
+		System* system;
+	};
 public:
-	
-
 	unsigned int create_entity()
 	{
 		unsigned int id = _next_id++;
@@ -70,16 +74,12 @@ public:
 	ComponentType& add_component(unsigned int entity_id)
 	{
 		verify_entity_exists(entity_id);
-		Entity& entity = entities[entity_id];
-
-		ComponentData component_data(create_component<ComponentType>(entity));
-
 		assert2(get_component<ComponentType>(entity_id) == nullptr,
-			"Entity %u already has a component of type '%s'.", entity_id, component_data.type.name());
+			"Entity %u already has a component of type '%s'.", entity_id,
+			typeid(ComponentType).name());
 
-		entity.components.push_back(component_data);
-
-		return static_cast<ComponentType&>(*component_data.component);
+		Entity& entity = entities[entity_id];
+		return *create_component<ComponentType>(entity);
 	}
 
 	template <typename ComponentType>
@@ -102,7 +102,10 @@ public:
 	void register_system(System* system)
 	{
 		static_assert(sizeof...(ComponentTypes) > 0, "Cannot register a system for zero components.");
-		register_system_helper<ComponentTypes...>(system);
+		Listener listener;
+		listener.system = system;
+		register_system_helper<ComponentTypes...>(listener.types);
+		listeners.push_back(listener);
 	}
 
 	/* Return a pretty string containing info about an entity. */
@@ -113,18 +116,20 @@ private:
 	void add_component(unsigned int entity_id, std::type_index type);
 
 	void notify_systems_created(const ComponentData& component);
+	void notify_systems_will_destroy(const ComponentData& component);
 
 	void verify_entity_exists(unsigned int entity_id) const;
 
 	template <typename Component1>
-	ComponentData create_component(const Entity& entity)
+	Component1* create_component(Entity& entity)
 	{
 		//todo maybe allocate somewhere to make all components of one type contiguous;
 		//can improve cpu time in some cases.
 		ComponentData component_data(new Component1(), typeid(Component1), entity.id);
 		component_data.component->entity_id = entity.id;
+		entity.components.push_back(component_data);
 		notify_systems_created(component_data);
-		return component_data;
+		return static_cast<Component1*>(component_data.component);
 	}
 
 	void create_entity_helper(Entity&)
@@ -133,7 +138,7 @@ private:
 	template <typename Component1>
 	void create_entity_helper(Entity& entity)
 	{
-		entity.components.push_back(create_component<Component1>(entity));
+		create_component<Component1>(entity);
 	}
 
 	template <typename Component1, typename Component2, typename... ComponentRest>
@@ -144,16 +149,16 @@ private:
 	}
 
 	template <typename Component1>
-	void register_system_helper(System* system)
+	void register_system_helper(std::vector<std::type_index>& types)
 	{
-		_component_type_listeners[typeid(Component1)].push_back(system);
+		types.push_back(typeid(Component1));
 	}
 
 	template <typename Component1, typename Component2, typename... ComponentRest>
-	void register_system_helper(System* system)
+	void register_system_helper(std::vector<std::type_index>& types)
 	{
-		register_system_helper<Component1>(system);
-		register_system_helper<Component2, ComponentRest...>(system);
+		register_system_helper<Component1>(types);
+		register_system_helper<Component2, ComponentRest...>(types);
 	}
 
 	/* Find component belonging to the specified entity. Returns null if the entity
@@ -163,8 +168,8 @@ private:
 	// Used to generate unique IDs for entities.
 	unsigned int _next_id = 0;
 
-	//map<component type, vector<systems interested in component type>>
-	std::unordered_map<std::type_index, std::vector<System*>> _component_type_listeners;
+	std::vector<Listener> listeners;
 
+	//map<entity ID, entity>
 	std::unordered_map<unsigned int, Entity> entities;
 };

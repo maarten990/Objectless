@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include "Component.h"
+#include "Engine/EntityManager.h"
 
 struct ComponentData;
 class EntityManager;
@@ -20,21 +21,22 @@ public:
 	/* Gets called when an entity is created which should be handled by the
 	 * system.
 	 * See also: ComponentManager::register */
-	virtual void notify_created(unsigned int entity, const ComponentData&) {
-		_entities.push_back(entity);
+	virtual void notify_created(unsigned int entity_id) {
+		_entities.push_back(entity_id);
 	}
 
-	/* Gets called when an entity is destroyed which should be handled by the
-	 * system.
+	/* Gets called when an entity is about to be destroyed which should be
+	 * handled by the system.
 	 * See also: ComponentManager::register */
-	virtual void notify_destroyed(unsigned int removed_entity) {
-		auto iterator = std::find(_entities.begin(), _entities.end(),
-			removed_entity);
+	virtual void notify_will_destroy(unsigned int entity_id) {
+		auto iterator = std::find(_entities.begin(), _entities.end(), entity_id);
 
 		/* make sure the entity is actually available */
 		if (iterator != _entities.end())
 			_entities.erase(iterator);
 	}
+
+	const std::vector<unsigned int> getEntities() const { return _entities; }
 
 protected:
 	/* List of entities that get acted on by the system. */

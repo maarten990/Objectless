@@ -17,7 +17,7 @@ public:
 
 	b2World& getWorld() { return world; }
 
-	void notify_created(unsigned int entity_id, const ComponentData& component_data) override;
+	void notify_created(unsigned int entity_id) override;
 
 private:
 	void stepWorld();

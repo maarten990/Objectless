@@ -192,6 +192,9 @@ int main()
 	em.register_system<Transform>(geometryDrawer);
 	em.register_system<PhysicsBodyComponent>(physics_world);
 
+	//createPlayer called twice to ensure destroying an entity works correctly.
+	createPlayer(em, *graphics);
+	em.remove_entity(0);
 	createPlayer(em, *graphics);
 
 	createWorldEdges(em);

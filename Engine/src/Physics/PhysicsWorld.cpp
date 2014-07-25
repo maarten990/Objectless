@@ -36,12 +36,12 @@ void PhysicsWorld::stepWorld()
 	world.Step(fixed_delta_time, num_velocity_iterations, num_position_iterations);
 }
 
-void PhysicsWorld::notify_created(unsigned int entity_id, const ComponentData& component_data)
+void PhysicsWorld::notify_created(unsigned int entity_id)
 {
-	System::notify_created(entity_id, component_data);
+	System::notify_created(entity_id);
 
 	//Create and link Box2D body to the component.
-	PhysicsBodyComponent& component = *static_cast<PhysicsBodyComponent*>(component_data.component);
+	PhysicsBodyComponent& component = *entity_manager.get_component<PhysicsBodyComponent>(entity_id);
 	b2BodyDef def;
 	//This makes it possible to get a pointer to a component directly from a b2Body.
 	def.userData = &component;
