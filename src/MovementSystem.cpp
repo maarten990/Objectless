@@ -15,12 +15,6 @@ void MovementSystem::step(float /*dt*/)
 		Movement *mv = _em->get_component<Movement>(id);
 		PhysicsBodyComponent* rb = _em->get_component<PhysicsBodyComponent>(id);
 
-		//todo remove this check, will be redundant when System::notify_created
-		//works correctly.
-		if (mv == nullptr || rb == nullptr)
-		{
-			return;
-		}
 		b2Vec2 linear_velocity(mv->speed);
 		linear_velocity.x *= mv->speed_multiplier.x;
 		linear_velocity.y *= mv->speed_multiplier.y;
