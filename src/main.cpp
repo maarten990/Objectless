@@ -42,27 +42,6 @@ void initialize_components(ComponentManager& mgr)
 	mgr.register_component<Transform>();
 }
 
-void movePlayer(EntityManager& em, unsigned int player_id, b2Vec2 translation, GeometryDrawer& drawer)
-{
-	b2Body& body = *em.get_component<PhysicsBodyComponent>(player_id)->body;
-	translation = b2Mul(body.GetTransform().q, translation);
-	translation *= 10000.0f;
-	//body.ApplyForceToCenter(translation, true);
-	body.ApplyLinearImpulse(translation, body.GetWorldCenter(), true);
-	translation.Normalize();
-	translation *= 25.0f;
-	drawer.draw_line(body.GetPosition().x, body.GetPosition().y, body.GetPosition().x + translation.x, body.GetPosition().y + translation.y);
-}
-
-void rotatePlayer(EntityManager& em, unsigned int player_id, float degrees)
-{
-	b2Body& body = *em.get_component<PhysicsBodyComponent>(player_id)->body;
-	b2Transform transform = body.GetTransform();
-	//body.SetTransform(transform.p, transform.q.GetAngle() + degrees * 0.1f);
-	//body.ApplyTorque(degrees * 100.0f, true);
-	body.ApplyAngularImpulse(degrees * 3000.0f, true);
-}
-
 void createPlayer(EntityManager& em, GraphicsSystem& graphics)
 {
 	unsigned int player = em.create_entity<KeyboardInput, Graphics, Transform, PhysicsBodyComponent>();
