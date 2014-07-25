@@ -38,8 +38,7 @@ void EventSystem::handle_keyevent(SDL_Keycode k, Uint32 type)
 	// Check for each of the entities if the component can be downcast to
 	// KeyBoardInputComponent. If so, try apply current keyboard event
 	for (unsigned int entity : _entities) {
-		Component* component = _entitymanager->get_component<KeyboardInput>(entity);
-		KeyboardInput* kb = static_cast<KeyboardInput*>(component);
+		KeyboardInput* kb = _entitymanager->get_component<KeyboardInput>(entity);
 
         // Check if key is in the dict. If so, apply function
         if(kb->keybinds.find(k) != kb->keybinds.end())
