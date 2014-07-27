@@ -73,7 +73,7 @@ void GraphicsSystem::step(float /*delta_time*/)
 		bool success = SDL_RenderCopyEx(_renderer, g->texture->getTexture(), nullptr,
 			&dest, rotation_degrees, &zero, SDL_FLIP_NONE) == 0;
 
-		assert2(success, "Failed to render texture '%s'. SDL error: ",
+		assert2(success, "Failed to render texture '%s'. SDL error: %s",
 			g->texture->getName().c_str(), SDL_GetError());
 	}
 
