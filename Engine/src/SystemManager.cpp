@@ -1,7 +1,7 @@
 #include <SDL.h>
 #include "Engine/SystemManager.h"
 #include "Engine/EntityManager.h"
-#include <Box2D/Common/b2Timer.h>
+#include "Engine/Timer.h"
 
 
 
@@ -37,19 +37,20 @@ void SystemManager::loop()
 {
 	uint32_t current_frame_count = 0;
 
-	b2Timer timer;
+	Timer timer;
+	//In seconds.
 	float previous_frame_duration = 1.0f / 60.0f;
 
 	while (*_running) {
 		++current_frame_count;
-		const float frame_start = timer.GetMilliseconds();
+		const Timer::Timestamp frame_start = timer.current_timestamp();
 
 		// call systems
 		for (System *system : _systems) {
 			system->step((float)previous_frame_duration);
 		}
 
-		previous_frame_duration = (timer.GetMilliseconds() - frame_start) * 0.001f;
+		previous_frame_duration = (float)timer.seconds_since(frame_start);
 		//Note: This fps does not include the delay used to stay below max fps.
 		double fps = 1.0f / previous_frame_duration;
 
