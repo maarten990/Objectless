@@ -43,12 +43,15 @@ if (LUA51_FOUND)
     option(ENABLE_LUA "Enables the Lua interface" ${LUA51_FOUND})
 endif()
 
+add_subdirectory("tinyobjloader")
 include_directories(${CMAKE_SOURCE_DIR}
                     ${CMAKE_SOURCE_DIR}/include
                     ${SDL2_INCLUDE_DIRS}
                     ${SDLIMG_INCLUDE_DIRS}
-                    ${BOX2D_INCLUDE_DIRS})
+                    ${BOX2D_INCLUDE_DIRS}
+                    ${tinyobjloader_SOURCE_DIR})
 
+link_directories(${tinyobjloader_BINARY_DIR})
 if (ENABLE_LUA)
     include_directories(${LUA_INCLUDE_DIR})
     add_definitions(-D WITH_LUA)
@@ -82,7 +85,8 @@ add_executable(objectless ${SRC} ${HEADERS})
 target_link_libraries(objectless
                       ${SDL2_LIBRARIES}
                       ${SDLIMG_LIBRARIES}
-                      ${BOX2D_LIBRARIES})
+                      ${BOX2D_LIBRARIES}
+                      tinyobjloader)
 
 if (ENABLE_LUA)
     target_link_libraries(objectless ${LUA_LIBRARIES})
